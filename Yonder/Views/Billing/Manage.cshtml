@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Yonder.Models.BillingMain>
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/ShopHome/_shopHome.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+<div class="w3-margin-top">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color:#F7D031;height:70px">
+                    <h2 class="pull-left">Billing</h2>
+                    <div class="pull-right">
+                        <p>Date : 12/10/2019</p>
+                        <p>Time : 12:00 PM</p>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="panel-group">
+                        <center>
+                            <div class="row">
+                                <div class="form-group col-md-6 col-md-offset-3 w3-margin-top">
+                                    <div class="input-group">
+                                        <input type="text" id="fromDate" placeholder="From Date" class="form-control datepicker" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default">to</button>
+                                        </span>
+                                        <input type="text" id="toDate" placeholder="To Date" class="form-control datepicker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-default" type="button" id="loadBillsBtn" style="background-color:#f7d301">
+                                Load Bills
+                            </button>
+                        </center>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <table class="table table-bordered table-hover" id="billDetails">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice Number</th>
+                                            <th>Order Number</th>
+                                            <th>Customer Number</th>
+                                            <th>Total Amount</th>
+                                            <th>Discount</th>
+                                            <th>Tax Amount</th>
+                                            <th>Paid Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var m in Model)
+                                        {
+                                            <tr>
+                                                <td><a href="@Url.Action("Details", new { invNumber=m.invoiceNumber })">@m.invoiceNumber</a></td>
+                                                <td>@m.order_number</td>
+                                                <td>@m.name</td>
+                                                <td>Rs @m.totalAmount</td>
+                                                <td>@m.discount</td>
+                                                <td>Rs @m.GST_amt</td>
+                                                <td>Rs @m.netAmount</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    <script>
+        $(document).ready(function () {
+            function getQueryStringValue(key) {
+                return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+            }
+
+            if (getQueryStringValue('fromDate') && getQueryStringValue('todate')) {
+                $('#fromDate').val(getQueryStringValue('fromDate'))
+                $('#toDate').val(getQueryStringValue('todate'))
+            }
+
+            var table = $('#billDetails').DataTable({
+                lengthMenu:[[5,10,20,,-1],[5,10,20,"All"]]
+            });
+            $('#billDetails_filter input').addClass('form-control input-sm')
+            $('.dataTables_length select').addClass('form-control input-sm')
+            $('.datepicker').datepicker();
+
+            $('#loadBillsBtn').click(function () {
+                if ($('#fromDate').val() == '' || $('#toDate').val() == '') {
+                    toastr.warning("", "Specify Between Dates", { positionClass: "toast-top-center" })
+                } else {
+                    document.location.href = '/Billing/Manage/?fromdate=' + $('#fromDate').val() + "&toDate=" + $('#toDate').val();
+                }
+            })
+        });
+    </script>
+
+    }

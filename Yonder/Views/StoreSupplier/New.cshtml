@@ -1,0 +1,107 @@
+﻿@model Yonder.Models.StoreSupplier
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/StoreHome/_StoreHome.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20 col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Supplier Registration
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "StoreSupplier", new AjaxOptions { HttpMethod = "POST" }, new { id = "SupplierRegistration" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Company" } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Mobile_Number, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Mobile_Number, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Mobile_Number, new { htmlAttributes = new { @class = "form-control", placeholder = "ex:-www.websie.domain" } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.GSTIN, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.GSTIN, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.GSTIN, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Pin Code" } })
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Head Office Address" } })
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.pinCode, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.pinCode, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.pinCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Pin Code" } })
+                    </div>
+                </div>
+                
+                @Html.HiddenFor(m => m.Supplier_Id)
+                <div class="form-group">
+                    <div class="">
+                        <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                        <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+</div>
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var validator = $("#SupplierRegistration").submit(function (e) {
+                if ($("#SupplierRegistration").valid()) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var dataString;
+                    var action = $("#SupplierRegistration").attr('action');
+                    dataString = new FormData($("#SupplierRegistration").get(0));
+                    $('.loading').show();
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        data: dataString,
+                        dataType: "json",
+                        contentType: false,
+                        processData: false
+                    }).done(function (result) {
+                        $('.loading').hide();
+                        if (result.success) {
+                            toastr.success(result.message, "Success", { positionClass: "toast-top-center" })
+                        }
+                        else
+                            toastr.error(result.message, "Error", { positionClass: "toast-top-center" })
+                    }).fail(function () {
+                        $('.loading').hide();
+                        toastr.error("Something unexpected happened", "Error", { positionClass: "toast-top-center" })
+
+                    });
+                }
+
+            })
+        })
+    </script>
+    }
+
+

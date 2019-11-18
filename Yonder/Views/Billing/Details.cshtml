@@ -1,0 +1,145 @@
+﻿@model Yonder.Models.BillingMain
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/ShopHome/_shopHome.cshtml";
+}
+
+<div class="w3-margin-top">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color:#F7D031;height:70px">
+                    <h2 class="pull-left">Invoice Number : @Model.invoiceNumber</h2>
+                    <div class="pull-right">
+                        <a href="@Url.Action("Manage")" class="w3-round btn w3-transparent" style="font-weight:bold;font-size:x-large">
+                            <span class="glyphicon glyphicon-remove text-dark"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="panel-group">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <table class="table table-bordered table-hover w3-border-blue">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="text-center">
+                                                Bill Details
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Billed date</th>
+                                            <td>@Model.billedDate</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Billed Time</th>
+                                            <td>@Model.time</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Billed By</th>
+                                            <td>@Model.billedBy</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Customer Name</th>
+                                            <td>@Model.name</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone Number</th>
+                                            <td>@Model.phoneNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Amount</th>
+                                            <td>Rs @Model.totalAmount</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Tax</th>
+                                            <td>Rs @Model.GST_amt</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Discount</th>
+                                            <td>@Model.discount %</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td id="status">@Model.status</td>
+                                        </tr>
+                                        <tr style="font-size:medium;font-weight:bolder;background-color:#c1c1c1">
+                                            <th>Paid Amount</th>
+                                            <td><strong id="payable">Rs @Model.netAmount</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <table class="table table-bordered table-hover w3-border-blue">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6" class="text-center">
+                                                Bill Item Details
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>GST</th>
+                                            <th>Total</th>
+                                            <th>Cancel</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var billitem in Model.billItems)
+                                        {
+                                            <tr>
+                                                <td>@billitem.itemName</td>
+                                                <td>Rs @billitem.price</td>
+                                                <td>@billitem.quantity</td>
+                                                <td>@billitem.gst%</td>
+                                                <td>Rs @billitem.totalWithTax</td>
+                                                <td>
+                                                    <button type="button" class="btn w3-white btn-sm i-delete" data-item-id="@billitem.slno">
+                                                        <span class="glyphicon glyphicon-remove text-danger"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                @if (Model.status == "Completed")
+                                {
+                                    <div class="pull-right">
+                                        <button type="button" id="CancellBill" class="btn btn-default" style="background-color:#F7D031;width:150px">
+                                            Cancel Bill
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $('#CancellBill').on("click",function () {
+                $.getJSON('@Url.Action("CancelBill", "Billing")', { invNumber: '@Model.invoiceNumber' }, function (data) {
+                    if (data.success) {
+                        $('#CancellBill').hide();
+                        $('#status').html("Cancelled");
+                        toastr.success(data.message, "Success", { positionClass: "toast-top-center" })
+                    }
+                    else {
+                        toastr.error(data.message, "Error", { positionClass: "toast-top-center" })
+                    }
+                })
+            })
+        })
+    </script>
+    }

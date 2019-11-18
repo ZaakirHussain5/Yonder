@@ -1,0 +1,300 @@
+﻿@model Yonder.ViewModels.CompanyPolicyViewModel
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;margin-top:20px">
+    New Policy
+</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "Policy", new AjaxOptions { HttpMethod = "POST" }, new { id = "CompanyPolicy" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row" id="Form">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.policy.company, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.company, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.policy.company, new SelectList(Model.CompanyList, "company", "company", Model.policy.company), "Select Comapny", new { @class = "form-control", id = "cmpList" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.policy.BranchName, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.BranchName, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.policy.BranchName, new List<SelectListItem>(), "Select Branch", new { @class = "form-control", id = "branchList" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.policy.IssuedBy, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.IssuedBy, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.policy.IssuedBy, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.policy.IssuedTo, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.IssuedTo, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.policy.IssuedTo, new { @class = "form-control", placeholder = "Enter Issued Person Name" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.policy.Designation, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.Designation, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.policy.Designation, new { @class = "form-control", placeholder = "Enter Issued Person Designation" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Card Value</label>
+                    @Html.ValidationMessageFor(m => m.policy.CardType, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.policy.CardType, new SelectList(Model.CardTypeList, "Type", "value", Model.policy.CardType), "Select Card Value", new { @class = "form-control", id = "cardTypeList" })
+                   @*<label class="control-label"> Card Value :<label id="cardValue"></label></label>*@
+                </div>
+
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.policy.NumberOfCards, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.NumberOfCards, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.policy.NumberOfCards, new { @class = "form-control", placeholder = "Enter Number of cards issued", id = "NumberOfCards" })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.policy.Discount, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.Discount, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.policy.Discount, new { @class = "form-control", placeholder = "Enter Discount Rate", id = "DiscountRate" })
+                </div>
+               
+                <div class="form-group col-md-3">
+                    <label for="cardValue" class="control-label">Card Type</label>
+                    <input type="text" id="cardValue" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="totalAmount" class="control-label">Total Amount</label>
+                    <input type="text" id="totalAmount" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="discountValue" class="control-label">Discount Value</label>
+                    <input type="text" id="discountValue" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-3">
+
+                    @Html.LabelFor(m => m.policy.PayableAmount, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.policy.PayableAmount, "", new { @class = "text-danger" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.policy.PayableAmount, "{0:C}", new { @class = "form-control", @readonly = true, id = "result" })
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-sm" type="button" id="btnCalculate">
+                                <i class="glyphicon glyphicon-question-sign"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                    <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                </div>
+            </div>
+        }
+        <div style="display:none" id="payment">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <h4 class="panel-heading">
+                            Company
+                        </h4>
+                        <div class="panel-body">
+                            <label id="dCm"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <h4 class="panel-heading">
+                            Branch
+                        </h4>
+                        <div class="panel-body">
+                            <label id="dbn"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <h4 class="panel-heading">
+                            Policy Number
+                        </h4>
+                        <div class="panel-body">
+                            <label id="dPn"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <h2 class="panel-heading">Payment</h2>
+                <div class="panel-body">
+                    <table class="table">
+                        <tr>
+                            <th>Issue Date</th>
+                            <td id="dId"></td>
+                        </tr>
+                        <tr>
+                            <th>Expiry date</th>
+                            <td id="dEd"></td>
+                        </tr>
+                        <tr>
+                            <th>Card Type</th>
+                            <td id="dCt"></td>
+                        </tr>
+                        <tr>
+                            <th>Number of Cards</th>
+                            <td id="dNc"></td>
+                        </tr>
+                        <tr>
+                            <th>Availed Discount</th>
+                            <td id="dAd"></td>
+                        </tr>
+                        <tr>
+                            <th>Payment Mode</th>
+                            <td>
+                                <select class="form-control" id="Mop">
+                                    <option value="">Select Payment Mode</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="panel-footer">
+                            <th>Total</th>
+                            <td id="Amount"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <center>
+                        <button type="button" id="btnPay" class="btn btn-default" style="background-color:#ffda0f">Pay Now</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel-footer">
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var date = new Date();
+            date.setDate(date.getDate());
+            $('.datepicker').datepicker({
+                startDate: date
+            })
+
+            $('#cardTypeList').change(function () {
+                $('#cardValue').val($('#cardTypeList').val())
+            })
+
+            $('#cmpList').change(function () {
+                var val = $(this).val();
+                var subItems = '<option value="">Select Branch</option>';
+                $.getJSON("@Url.Action("getBranch", "Policy")", { id: val }, function (data) {
+                    $.each(data, function (index, item) {
+                        subItems += "<option value='" + item.BranchName + "'>" + item.BranchName + "</option>"
+                    });
+                    $("#branchList").html(subItems)
+                });
+            })
+
+
+            var calBtn = $('#btnCalculate')
+            calBtn.click(function () {
+
+                var numberOfcards = $('#NumberOfCards').val()
+                var discountRate = $('#DiscountRate').val()
+                var cardValue = $('#cardTypeList option:selected').text()
+                var result = $('#result')
+                var total = numberOfcards * cardValue;
+                var discountValue = (total * discountRate) / 100;
+                result.val((total - discountValue))
+                $('#totalAmount').val(total)
+                $('#discountValue').val(discountValue)
+            })
+
+            $('#CompanyPolicy').submit(function (event) {
+                if ($('#CompanyPolicy').valid()) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    var data = new FormData($('#CompanyPolicy').get(0))
+                    var action = $('#CompanyPolicy').attr('action')
+                    $('.loading').show();
+                    $.ajax({
+                        type: 'POST',
+                        data: data,
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                $('#Form').hide();
+                                $('#dCm').html(result.data.company)
+                                $('#dbn').html(result.data.BranchName)
+                                $('#dPn').html(result.data.PolicyNumber)
+                                $('#dCt').html(result.data.CardType)
+                                $('#dAd').html(result.data.Discount)
+                                $('#dNc').html(result.data.NumberOfCards)
+                                $('#dId').html(result.data.IssuedDate)
+                                $('#dEd').html(result.data.ValidTill)
+                                $('#Amount').html(result.data.PayableAmount)
+                                $('#payment').show();
+                            }
+                            else {
+                                toastr.error(result.Message, "Error", { positionClass: 'toast-top-center' })
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $('.loading').hide();
+                            console.log(textStatus)
+                            toastr.error(errorThrown, "Error", { positionClass: 'toast-top-center' })
+                        }
+                    })
+                }
+
+            })
+
+            $('#btnPay').click(function () {
+                if ($('#mop').val() !== '' && $('#mop').val() !== 'Cash') {
+                    var options = {
+                        "key": "rzp_test_zCx9olD0f564YC", // Enter the Key ID generated from the Dashboard
+                        "amount": $('#Amount').html()*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise or INR 500.
+                        "currency": "INR",
+                        "name": "Yonder",
+                        "description": "The Social Hub",
+                        "image": "@Url.Content("~/Content/Images/Main_logo_Yonder.png")",//This is a sample Order ID. Create an Order using Orders API. (https://razorpay.com/docs/payment-gateway/orders/integration/#step-1-create-an-order). Refer the Checkout form table given below
+                        "handler": function (response) {
+                            console.log(response);
+                            toastr.success("Payment Processed Successfully", "Success", {positionClass:"toast-top-center"})
+                        },
+                        "prefill": {
+                            "name":$('#fn').val() + ' ' + $('#ln').val(),
+                            "email": "user@example.com",
+                            "contact": $('#pn').val()
+                        },
+                        "theme": {
+                            "color": "#ffda0f"
+                        }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+            })
+        })
+</script>
+}

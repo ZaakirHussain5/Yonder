@@ -1,0 +1,158 @@
+﻿@model Yonder.Models.CardRegistration
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;margin-left:100px;margin-right:100px">
+    Corporate Card Registration
+</h2>
+
+<div class="panel panel-default" style="margin-left:100px;margin-right:100px">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("AddCard", "CorpCardRegistration", new AjaxOptions { HttpMethod = "POST" }, new { id = "CardRegistration" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="panel-group">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.PolicyNumber, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.PolicyNumber, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.PolicyNumber, new { @class = "form-control",placeholder="Enter Policy Number" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.CardNumber, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", placeholder = "Enter Card Number" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.RFID, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.RFID, "", new { @class = "text-danger" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.RFID, new { @class = "form-control", placeholder = "Enter RFID Number" })
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" style="background-color:#ffda0f;margin-left:5px">
+                                    ADD
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel-group">
+                <text class="text-black-50 text-dark text-lg-center" role="alert">
+                    <strong>@Model.NumberOfCardsIssued Cards Issued out of @Model.TotalNumberofcards Cards</strong>
+                </text>
+            </div>
+            <div class="panel-group">
+                <table class="table table-bordered table-hover" id="Cards">
+                    <thead>
+                        <tr>
+                            <th>Policy Number</th>
+                            <th>Card Type</th>
+                            <th>Card Value</th>
+                            <th>Card Number</th>
+                            <th>RFID Number</th>
+                            <th>Issue New Card</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        </div>
+    </div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            var table = $('#Cards').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetCards", "CorpCardRegistration", new { policyNumber = Model.PolicyNumber })',
+                    dataSrc:""
+                },
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, "All"]],
+                order: [[ 1, 'asc' ]],
+                columns: [
+                    {
+                        data:'PolicyNumber'
+                    },
+                    {
+                        data: 'CardType'
+                    },
+                    {
+                        data: 'Value'
+                    },
+                    {
+                        data: 'CardNumber'
+                    },
+                    {
+                        data:'RFID'
+                    },
+                    {
+                        data: 'isBlocked',
+                        render:function(data,row,index){
+                            if (data == true) {
+                                return '<button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-pencil"></i> issue New Card</button>'
+                            } else {
+                                return '<button type="button" class="btn btn-danger" data-card-no=' + row.CardNumber + '><i class="glyphicon glyphicon-ban-circle"></i> Block Card</button>'
+                            }
+                        }
+                    }
+                ],
+                fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    if (aData.isBlocked == true) {
+                        $('td', nRow).css('background-color', '	Red');
+                        $('td', nRow).css('color', 'white');
+                    }
+                }
+            })
+
+            $('#CardRegistration').submit(function (event) {
+                if ($('#CardRegistration').valid()) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    var data = new FormData($('#CardRegistration').get(0));
+                    var action = $('#CardRegistration').attr('action');
+                    $('.loading').show();
+                    $.ajax({
+                        type: 'POST',
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                table.ajax.reload();
+                                toastr.success(result.Message, "Success", { positionClass: "toast-top-center" })
+                            }
+                            else {
+                                toastr.error(result.Message, "Error", { positionClass: "toast-top-center" })
+                            }
+                        },
+                        error: function (textStatus) {
+                            $('.loading').hide();
+                            toastr.error('Server Error', "Error", { positionClass: "toast-top-center" })
+                        }
+                    })
+                }
+            })
+
+            $('#Cards_filter input').addClass('form-control input-sm')
+            $('.dataTables_length select').addClass('form-control input-sm')
+        })
+    </script>
+
+    } 

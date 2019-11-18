@@ -1,0 +1,177 @@
+﻿@model Yonder.Models.Menu
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/ShopHome/_shopHome.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Menu Creation
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "CompanyMaster", new AjaxOptions { HttpMethod = "POST" }, new { id = "MenuCreation" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.Category, new SelectList(Model.categories, "category", "category"), "Select Category", new { @class = "form-control", placeholder = "Enter Company" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.itemName, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.itemName, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.itemName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Item Name" } })
+                    </div>
+                    <div class="form-group col-md-12">
+                        @Html.CheckBoxFor(m => m.isOcational, new { id = "ocationchek", @class = "form-check" })
+                        @Html.LabelFor(m => m.isOcational, new { @class = "control-label" })
+                    </div>
+                    <div id="fromtoDate">
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.availableFrom, htmlAttributes: new { @class = "control-label " })
+                            @Html.ValidationMessageFor(model => model.availableFrom, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.availableFrom, htmlAttributes : new { @class = "form-control datepicker", placeholder = "Enter Avalilablity Start Time" } )
+                        </div>
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.availableTill, htmlAttributes: new { @class = "control-label " })
+                            @Html.ValidationMessageFor(model => model.availableTill, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(model => model.availableTill, htmlAttributes : new { @class = "form-control datepicker", placeholder = "Enter Avalilablity End Time" } )
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.available_start_time, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.available_start_time, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.available_start_time, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Avalilablity Start Time" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.available_end_time, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.available_end_time, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.available_end_time, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Avalilablity End Time" } })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.Unit,
+                    new List<SelectListItem>()
+                    {
+                        new SelectListItem(){Text="Pc(s)",Value="Pcs"},
+                        new SelectListItem(){Text="Plate(s)",Value="Plates"},
+                        new SelectListItem(){Text="Ltr(s)",Value="Ltrs"}
+                    }, "Select Unit of Mesurement", new { @class = "form-control", onchange = "loadCity(this.selectedIndex)" })
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Price per Unit" } })
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.GST, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.GST, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.GST, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter GST Percentage" } })
+                    </div> 
+
+                    <div class="form-group col-md-6">
+                        @if (Model.MenuId == 0)
+                    {
+                            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label " })
+                            <input type="file" id="ImageFile" class="form-control" required />
+                    }
+                        else
+                        {
+                            <img src="@Url.Content(Model.Image)" class="img-responsive img-thumbnail" style="width:200px;height:100px" />
+                            <div class="btn btn-default">
+                                <i class="glyphicon glyphicon-edit"></i><label for="ImageFile">Change Image</label>
+                                <input type="file" id="ImageFile" class="sr-only" />
+                            </div>
+                    }
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.MenuId)
+                <div class="form-group">
+                    <div class="">
+                        <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                        <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+</div>
+
+@section scripts
+    {
+
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: "dd/m/yyyy",
+            autoClose:true
+        })
+        if ($('#ocationchek').prop("checked") == true)
+            $('#fromtoDate').show()
+        else
+            $('#fromtoDate').hide()
+        $('#ocationchek').change(function () {
+            if ($('#ocationchek').prop("checked") == true) {
+                $('#fromtoDate').show()
+            }
+            else {
+                $('#fromtoDate').hide()
+            }
+        })
+        $('#MenuCreation').submit(function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var action = $("#MenuCreation").attr("action");
+            var data = new FormData($("#MenuCreation").get(0))
+            if (document.getElementById("ImageFile").files.length !== 0)
+                var file = document.getElementById("ImageFile").files[0];
+            data.append("ImageFile", file)
+            if ($('#MenuCreation').valid()) {
+                $('.loading').show();
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (result) {
+                        if (result.Success) {
+                            $('.loading').hide();
+                            toastr.success(result.Message, "Success", { positionClass: 'toast-top-center' })
+                        }
+                        else {
+                            $('.loading').hide();
+                            toastr.error(result.Message, "Error", { positionClass: 'toast-top-center' })
+                        }
+                    },
+                    error: function (result) {
+                        $('.loading').hide();
+                        toastr.error("Server Error", "Error", { positionClass: 'toast-top-center' })
+                    }
+                })
+            }
+
+        })
+    })
+    </script>
+}
+

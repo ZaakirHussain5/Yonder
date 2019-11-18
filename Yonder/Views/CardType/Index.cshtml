@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Yonder.Models.CardType>
+
+@{
+    ViewBag.Title = "Card Types";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Card Types
+</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
+            <a href="@Url.Action("Create", "CardType")"
+               class="btn btn-default btn-lg" style="background-color:#ffda0f;width:auto">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                 Create New Card Type
+            </a> </p>
+        <table id="cardTypes" class="table table-bordered table-hover margin-top-20">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.value)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.discount)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(@item.Type, "Edit", new { id = item.CardTypeId })
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.value)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.discount)
+                        </td>
+                        <td>
+                            <button data-cardtype-id="@item.CardTypeId" id="btnDelete" class="btn btn-sm c-delete" style="background-color:transparent"><i class="glyphicon glyphicon-remove" style="color:red"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            var table = $("#cardTypes").DataTable({
+                paging: false,
+                searching: false,
+                responsive:true
+            })
+            $('.c-delete').on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure you want to delete this card type?", function (result) {
+                    if (result) {
+                        var id = button.attr('data-cardtype-id');
+                        $('.loading').show()
+                        $.ajax({
+                            url: '/CardType/Delete/' + id,
+                            method: 'post',
+                            success: function () {
+                                $('.loading').hide()
+                                table.row(button.parents("tr")).remove().draw()
+                            },
+                            error: function () {
+                                $('.loading').hide()
+                                alert('failed')
+                            }
+                        })
+                    }
+                }).find('.modal-content').css({
+                    'margin-top': function () {
+                        var w = $(window).height();
+                        var b = $(".modal-dialog").height();
+                        // should not be (w-h)/2
+                        var h = (w - b) / 3;
+                        return h + "px";
+                    }
+                })
+        })
+        })
+    </script>
+}

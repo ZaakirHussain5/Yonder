@@ -1,0 +1,127 @@
+﻿@model Yonder.Models.StoreInventory
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/StoreHome/_StoreHome.cshtml";
+}
+
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="w3-margin-top  col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+   Item Inventory
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "StoreInventory", new AjaxOptions { HttpMethod = "POST" }, new { id = "InvenForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.category, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.category, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.category, new SelectList(Model.StoreCategories, "category", "category"), "Select Category", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.item_Code, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.item_Code, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.item_Code, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Item Code" } })
+                    </div>
+                    
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.item, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.item, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.item, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Item" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.price, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Price" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.gst, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.gst, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.gst, new SelectList(Model.StoreGSTs, "gst", "gst"), "Select GST", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.avl_Qty, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.avl_Qty, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.avl_Qty, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Available Quantity" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.UOM, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.UOM, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.UOM, new SelectList(Model.StoreUOMs, "UOM", "UOM"), "Select UOM", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.HSN_Code, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.HSN_Code, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.HSN_Code, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Exipry Date" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.Expiry_Date, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Expiry_Date, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Expiry_Date, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Exipry Date" } })
+                    </div>
+                </div>
+              @Html.HiddenFor(m=>m.status)
+                <div class="form-group">
+                    <div class="">
+                        <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                        <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer">
+      <span class="glyphicon glyphicon-arrow-left"></span>  @Html.ActionLink("Back to List", "Index")
+    </div>
+
+</div>
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var validator = $("#InvenForm").submit(function (e) {
+                if ($("#InvenForm").valid()) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var dataString;
+                    var action = $("#InvenForm").attr('action');
+                    dataString = new FormData($("#InvenForm").get(0));
+                    $('.loading').show();
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        data: dataString,
+                        dataType: "json",
+                        contentType: false,
+                        processData: false
+                    }).done(function (result) {
+                        $('.loading').hide();
+                        if (result.success) {
+                            toastr.success(result.message, "Success", { positionClass: "toast-top-center" })
+                        }
+                        else
+                            toastr.error(result.message, "Error", { positionClass: "toast-top-center" })
+                    }).fail(function () {
+                        $('.loading').hide();
+                        toastr.error("Something unexpected happened", "Error", { positionClass: "toast-top-center" })
+
+                    });
+                }
+
+            })
+        })
+    </script>
+}
+
+

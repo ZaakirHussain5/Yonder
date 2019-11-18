@@ -1,0 +1,149 @@
+﻿@model Yonder.Models.CompanyMaster
+
+@{
+    ViewBag.Title = "CompanyRegistration";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20 col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Company Registration
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "CompanyMaster", new AjaxOptions { HttpMethod = "POST" }, new { id = "CompanyRegistration" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.company, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.company, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.company, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Company" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.Website, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.Website, new { htmlAttributes = new { @class = "form-control", placeholder = "ex:-www.websie.domain" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.headOffice, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.headOffice, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.headOffice, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Head Office Address" } })
+                    </div>
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.PinCode, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.PinCode, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.PinCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Pin Code" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.State, new List<SelectListItem>(), "Select State", new { @class = "form-control", id = "stateList", onchange = "loadCity(this.selectedIndex)" })
+
+                    </div>
+                    <div class="form-group col-md-6">
+                        @if (Model.id == 0)
+                        {
+                            @Html.LabelFor(model => model.Logo, htmlAttributes: new { @class = "control-label " })
+                            <input type="file" id="ImageFile" class="form-control" required />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content(Model.Logo)" class="img-responsive img-thumbnail" style="width:200px;height:100px" />
+                            <div class="btn btn-default">
+                                <i class="glyphicon glyphicon-edit"></i><label for="ImageFile">Change Image</label>
+                                <input type="file" id="ImageFile" class="sr-only" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label " })
+                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.City, new List<SelectListItem>(), "Select City", new { @class = "form-control", id = "cityList" })
+
+                    </div>
+
+                </div>
+                @Html.HiddenFor(m => m.id)
+                <div class="form-group">
+                    <div class="">
+                        <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                        <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+</div>
+
+@section scripts
+    {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+    function loadCity(index) {
+        print_city('cityList', index)
+    }
+
+    $(document).ready(function () {
+        print_state('stateList')
+        @if (@Model.id != 0)
+             {
+              @:$('#stateList').val('@Model.State').change()
+                      @:$('#cityList').val('@Model.City').change()
+             }
+
+        $('#CompanyRegistration').submit(function (e) {
+            if ($('#CompanyRegistration').valid()) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var action = $("#CompanyRegistration").attr("action");
+                var data = new FormData($("#CompanyRegistration").get(0))
+                if (document.getElementById("ImageFile").files.length !== 0) {
+                    var file = document.getElementById("ImageFile").files[0];
+                    data.append("ImageFile", file)
+                }
+                $('.loading').show();
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (result) {
+                        if (result.Success) {
+                            $('.loading').hide();
+                            toastr.success(result.Message, "Success", { positionClass: 'toast-top-center' })
+                        }
+                        else {
+                            $('.loading').hide();
+                            toastr.error(result.Message, "Error", { positionClass: 'toast-top-center' })
+                        }
+                    },
+                    error: function (result) {
+                        $('.loading').hide();
+                        toastr.error("Something unexpected Happened", "Error", { positionClass: 'toast-top-center' })
+                    }
+                })
+            }
+        })
+    })
+</script>
+
+}

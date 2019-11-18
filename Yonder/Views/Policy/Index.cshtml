@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Yonder.Models.Policy>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;margin-top:50px">
+    Company Policies
+</h2>
+
+<div class="panel panel-default" >
+    <div class="panel-body">
+        <a href="@Url.Action("New", "Policy")"
+           class="btn btn-default btn-lg" style="background-color:#ffda0f;width:auto;margin-bottom:10px">
+            <i class="glyphicon glyphicon-plus-sign"></i>
+            New Company Policy
+        </a>
+        <table class="table table-bordered table-hover table-responsive" id="policies">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PolicyNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.company)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BranchName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CardType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NumberOfCards)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Discount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PayableAmount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IssuedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ValidTill)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PolicyNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.company)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BranchName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CardType)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NumberOfCards)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Discount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PayableAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssuedDate,"{0:d-MMM-yyyy}")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ValidTill)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Index", "CorpCardRegistration", new { pn = item.PolicyNumber })" class="delete-policy btn btn-amber btn-teal btn-sm" data-policy-id="@item.policyid">
+                                <i class="glyphicon glyphicon-plus-sign"></i>
+                                Add Cards
+                            </a>
+                            <button class="delete-policy btn btn-danger sr-only btn-sm" data-policy-id="@item.policyid">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            $('#policies').DataTable({
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, "All"]]
+            });
+            $('#policies_filter input').addClass('form-control input-sm')
+            $('.dataTables_length select').addClass('form-control input-sm')
+        })
+    </script>
+    }

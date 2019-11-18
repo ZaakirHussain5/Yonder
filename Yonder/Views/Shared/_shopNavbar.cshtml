@@ -1,0 +1,45 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="@Url.Action("Index", "ShopHome")">
+                <img alt="List View" src="@Url.Content("~/Content/Images/Main_logo_Yonder.png")" class="img-responsive resize-image" />
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-center">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Masters <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu"> 
+                        <li>@Html.ActionLink("Shop Profile", "Index", "ShopProfile", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Categories", "Index", "Category", null, new { @class = "dropdown-item" })</li>
+                    </ul>
+                </li>
+                <li>
+                    @Html.ActionLink("Menu Creation", "Index", "Menu", null, new { @class = "strong-link" })
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Billing <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("New Bill", "Index", "Billing", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Manage Bills", "Manage", "Billing", null, new { @class = "dropdown-item" })</li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome @Html.Action("GetShopName","ShopHome") <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Update Profile", "Index", "ShopHome")</li>
+                        <li class="divider"></li>
+                        <li>@Html.ActionLink("Logout", "Logout", "AdminHome")</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

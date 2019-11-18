@@ -1,0 +1,190 @@
+﻿@model Yonder.Models.CardRegistration
+@{
+    ViewBag.Title = "Corporate Card registration";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 style="margin-top:20px;background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Employee Registration
+</h2>
+
+<div class="panel panel-default" >
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "EmployeeRegistration", new AjaxOptions { HttpMethod = "POST" }, new { id = "Registration" }))
+        {
+            @Html.AntiForgeryToken()
+            <div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.CardNumber, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", placeholder = "Enter Card Number", id = "CardNumber" })
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="ValidateBtn" type="button" style="background-color:#ffda0f;margin-left:5px">
+                                    Validate
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.EmpId, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.EmpId, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.EmpId, new { @class = "form-control", placeholder = "Enter Employee ID" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter First Name",id="EmpName" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter Last Name" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Designation, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Designation, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Designation, new { @class = "form-control", placeholder = "Enter Employee Designation" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Department, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Department, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Department, new { @class = "form-control", placeholder = "Enter Department" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email Address" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.PhoneNumber, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Enter Phone Number" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                        @Html.TextAreaFor(m => m.Address, new { @class = "form-control", placeholder = "Enter Address" })
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(m => m.IdenType, new { @class = "control-label" })
+                                @Html.ValidationMessageFor(m => m.IdenType, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(m => m.IdenType, Model.idenTypes, "Select Identification Type", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(m => m.IdenNo, new { @class = "control-label" })
+                                @Html.ValidationMessageFor(m => m.IdenNo, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(m => m.IdenNo, new { @class = "form-control",placeholder="Enter Identification Number" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(m => m.RegisteredBy, new { @class = "control-label" })
+                                @Html.ValidationMessageFor(m => m.RegisteredBy, "", new { @class = "text-danger" })
+                                @Html.DropDownListFor(m => m.RegisteredBy, new List<SelectListItem>()
+                           {
+                               new SelectListItem{Text="Yonder",Value="Yonder"},
+                               new SelectListItem{Text="Comapny Admin",Value="Comapny Admin"},
+                              new SelectListItem{Text="Comapny Team Lead",Value="Comapny Team Lead"},
+                               new SelectListItem{Text="Card User",Value="Card User"}
+                           }, "Select Registration By", new { @class = "form-control",id="regt" })
+                            </div>
+                            <div class="form-group col-md-6">
+                                @Html.LabelFor(m => m.RegistrationIden, new { @class = "control-label" })
+                                @Html.ValidationMessageFor(m => m.RegistrationIden, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(m => m.RegistrationIden, new { @class = "form-control",placeholder="Enter Registration Identity",id="reg" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="checkbox" id="chkTNC" />
+                        I Agree to the Terms & Conditions
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div>
+                            <input type="submit" value="Register" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnSubmit" />
+                            <button type="reset" class="btn btn-default" style="width: 120px">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#btnSubmit").attr("disabled", true);
+            $('#regt').change(function () {
+                if( $('#regt').val()=="Card User")
+                    $('#reg').val($('#EmpName').val())
+            })
+            $('#chkTNC').change(function () {
+                if ($('#chkTNC').prop("checked") == true) {
+                    $("#btnSubmit").attr("disabled", false);
+                }
+                else {
+                    $("#btnSubmit").attr("disabled", true);
+                }
+
+            })
+            $('#ValidateBtn').click(function () {
+                var CardNumber = $('#CardNumber').val();
+                $.getJSON('@Url.Action("validateCard","EmployeeRegistration")', { id: CardNumber }, function (data) {
+                    if (data.isValid) {
+                        toastr.success("Card Number is Valid Proceed to Register", "Validated", { positionClass: "toast-top-center" })
+                    }
+                    else {
+                        toastr.warning("Invalid Card Number check the Card Number and try again ", "Invalid Card", { positionClass: "toast-top-center" })
+                    }
+                })
+            })
+
+            $('#Registration').submit(function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                if ($('#Registration').valid()) {
+                    var data = new FormData($('#Registration').get(0));
+                    var action = $('#Registration').attr('action');
+                    $('.loading').show();
+                    $.ajax({
+                        type: 'POST',
+                        data: data,
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                toastr.success(result.Message, "Success", { positionClass: "toast-top-center" })
+                            }
+                            else {
+                                toastr.error(result.Message, "Error", { positionClass: "toast-top-center" })
+                            }
+                        },
+                        error: function (result) {
+                            $('.loading').hide();
+                            toastr.error("Server Error", "Error", { positionClass: "toast-top-center" })
+                        }
+                    })
+                }
+             
+            })
+        })
+</script>
+
+}

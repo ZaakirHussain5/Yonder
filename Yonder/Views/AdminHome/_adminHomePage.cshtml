@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("_Head")
+<style>
+    .div {
+    min-height: 100%;
+    max-width: 100%;
+    background-color: #008000;
+ }
+</style>
+<body class="background-tint">
+ 
+    @Html.Partial("_Navbar")
+    <div class="container body-content">
+     
+        @RenderBody()
+   
+       
+    </div>
+    @Html.Partial("_Footer")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    
+    
+</body>
+</html>
+

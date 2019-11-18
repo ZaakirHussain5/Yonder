@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Yonder.Models.Material_In>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Material Inwords
+</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <a href="@Url.Action("Index", "Min")"
+           class="btn btn-default btn-lg" style="background-color:#ffda0f;width:auto;margin-bottom:10px">
+            <i class="glyphicon glyphicon-plus-sign"></i>
+            New Inword
+        </a>
+        <table class="table table-bordered table-hover" id="Inwords">
+            <thead>
+                <tr>
+                    <th>
+                        Inword By
+                    </th>
+                    <th>
+                       Inword For
+                    </th>
+                    <th>
+                       Date
+                    </th>
+                    <th>
+                       Time
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.inword_From)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.inword_for)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InwordDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InwordTime)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("View", "Min", new {id=item.mi_number})" data-toggle="tooltip" title="Edit" class="btn btn-white btn-sm">
+                                <i class="glyphicon glyphicon-eye-open" style="color:blue"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            var cardtype = $("#Inwords").DataTable({
+                responsive: true,
+                lengthMenu:[[3,5,10,-1],[3,5,10,"All"]]
+            })
+            $('#Inwords_filter input').addClass('form-control');
+            $('.dataTables_length select').addClass('form-control');
+        })
+    </script>
+
+}

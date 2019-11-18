@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+<style>
+    body{
+        background-image:url('../../Content/Images/SliderImg3.jpg');
+        background-size:cover;
+    }
+</style>
+   <h1 id="greeting" class="bg-default w3-margin-top" style="background-color:#ffd800;padding:10px">
+
+   </h1>
+
+
+
+@section scripts
+{
+
+
+    <script>
+        var thehours = new Date().getHours();
+        var themessage;
+        var morning = ('Good morning');
+        var afternoon = ('Good afternoon');
+        var evening = ('Good evening');
+
+        if (thehours >= 0 && thehours < 12) {
+            themessage = morning;
+
+        } else if (thehours >= 12 && thehours < 17) {
+            themessage = afternoon;
+
+        } else if (thehours >= 17 && thehours < 24) {
+            themessage = evening;
+        }
+
+        $('#greeting').html(themessage+'! Admin');
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

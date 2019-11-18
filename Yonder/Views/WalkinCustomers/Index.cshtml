@@ -1,0 +1,415 @@
+﻿@model Yonder.Models.CardRegistration
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+<h2 class="w3-margin-top" style="background-color:#F7D031;padding:15px 15px 15px 15px;">Walkin Customer Registration</h2>
+
+<div class="panel panel-default">
+    @Html.ValidationSummary(true, "Please Fix the Error", new { @class = "text-danger" })
+    @using (Ajax.BeginForm("Register", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "WalkinForm" }))
+    {
+        <div class="panel-body">
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs">
+                        <li id="verif"><a href="#Verification" data-toggle="tab" class="disabled"> Verification</a></li>
+                        <li id="reg"><a href="#Registration" data-toggle="tab" id="regBtn" class="disabled">Registration</a></li>
+                        <li id="pay"><a href="#Payment" data-toggle="tab" class="disabled">Card Selection</a></li>
+                        <li id="pay"><a href="#Confirmation" data-toggle="tab" class="disabled">Confirmation</a></li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="Verification">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })*
+                                    @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(m => m.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter First Name", id = "fName" } })
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @Html.LabelFor(m => m.LastName, new { @class = "control-label" })*
+                                    @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(m => m.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Last Name", id = "lName" } })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    @Html.LabelFor(m => m.PhoneNumber, new { @class = "control-label" })
+                                    @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enetr Phone Number", id = "PhoneNummber" } })
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" style="background-color:#F7D031" id="btnGetOTP">
+                                                Get OTP
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Verification Code</label>
+                                    <input type="text" placeholder="Enter Verification Code" class="form-control" id="verifCode" />
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div>
+                                        <input type="button" value="Verify" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnVerify" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="Registration">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <h5 class="panel-heading">
+                                            Primary Details
+                                        </h5>
+                                        <div class="panel-body row">
+                                            <div class="form-group col-md-6">
+                                                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })*
+                                                @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter First Name", id = "fn" } })
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                @Html.LabelFor(m => m.LastName, new { @class = "control-label" })*
+                                                @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Last Name", id = "ln" } })
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "EnterEmail Address" } })
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.PhoneNumber, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Phone Number", id = "pn" } })
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Address" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <h5 class="panel-heading">
+                                            Personal Details
+                                        </h5>
+                                        <div class="panel-body row">
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.Gender, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(m => m.Gender,new List<SelectListItem>() {
+                                                    new SelectListItem() { Text = "Male", Value = "Male" },
+                                                    new SelectListItem() { Text = "Female", Value = "Female" } }, "Select Gender", new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.birthDate, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.birthDate, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.birthDate, new { htmlAttributes = new { @class = "form-control datePicker", placeholder = "Enter Birth Date" } })
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                @Html.LabelFor(m => m.maritalStatus, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.maritalStatus, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(m => m.maritalStatus, new List<SelectListItem>() {
+                                                    new SelectListItem() { Text = "Single", Value = "Single" },
+                                                    new SelectListItem() { Text = "Married", Value = "Married" } }, "Select Marital Status", new { @class = "form-control" ,id="genderSelect" })
+                                            </div>
+                                            <div class="form-group col-md-4" id="aniveryDate">
+                                                @Html.LabelFor(m => m.anniversaryDate, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.anniversaryDate, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.anniversaryDate, new { htmlAttributes = new { @class = "form-control datePicker", placeholder = "Enter Aniversary Date" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <h5 class="panel-heading">
+                                            Identification Details
+                                        </h5>
+                                        <div class="panel-body row">
+                                            <div class="form-group col-md-6">
+                                                @Html.LabelFor(m => m.IdenType, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.IdenType, "", new { @class = "text-danger" })
+                                                @Html.DropDownListFor(m => m.IdenType, Model.idenTypes, "Select Indentification type", new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                @Html.LabelFor(m => m.IdenNo, new { @class = "control-label" })
+                                                @Html.ValidationMessageFor(m => m.IdenNo, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(m => m.IdenNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Branch Name" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div>
+                                        <a href="#Payment" data-toggle="tab" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnRegister">Next-></a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="Payment">
+                            <div class="panel panel-default">
+                                <h5 class="panel-heading">
+                                    Payment Details
+                                </h5>
+                                <div class="panel-body row">
+                                    <div class="form-group col-md-12">
+                                        @Html.LabelFor(m => m.CardType, new { @class = "control-label" })*
+                                        @Html.ValidationMessageFor(m => m.CardType, "", new { @class = "text-danger" })
+                                        @Html.DropDownListFor(m => m.CardType, new SelectList(Model.CardTypes, "Type", "Type"), "Select Card Type", new { @class = "form-control", id = "ddlCardType" })
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <table class="table table-bordered table-hover" id="tblCardType" style="display:none">
+                                            <thead>
+                                                <tr>
+                                                    <th>Card Type</th>
+                                                    <th>Card Value</th>
+                                                    <th>Discount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        @Html.LabelFor(m => m.CardNumber, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.CardNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Card Number" } })
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        @Html.LabelFor(m => m.RFID, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.RFID, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.RFID, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter RFID Number" } })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <div>
+                                    <a href="#Registration" data-toggle="tab" class="btn btn-default" style="width: 120px" id="btnPayPrevious"> <i class="glyphicon glyphicon-arrow-left"></i> Previous</a>
+                                    <input type="submit" value="Register" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="Confirmation">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <h4 class="panel-heading">
+                                            First Name
+                                        </h4>
+                                        <div class="panel-body">
+                                            <label id="dFn"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <h4 class="panel-heading">
+                                            Last Name
+                                        </h4>
+                                        <div class="panel-body">
+                                            <label id="dLn"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <h4 class="panel-heading">
+                                            Phone Number
+                                        </h4>
+                                        <div class="panel-body">
+                                            <label id="dPn"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <h2 class="panel-heading">Payment</h2>
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Card Type</th>
+                                            <td id="dCt"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Card Number</th>
+                                            <td id="dCn"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>PIN Number</th>
+                                            <td id="dPin"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Card Value</th>
+                                            <td id="dCv"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Payment Mode</th>
+                                            <td>
+                                                <select class="form-control" id="mop">
+                                                    <option value="">Select Payment Mode</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="UPI">UPI</option>
+                                                    <option value="NEFT">NEFT</option>
+                                                    <option value="Mobile Banking">Mobile Banking</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="panel-footer">
+                                            <th>Total</th>
+                                            <td id="Total"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <center>
+                                <div class="form-group">
+                               
+                                    <button type="button" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnPay">Pay Now</button>
+                                </div>
+                            </center>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+   
+</div>
+
+@section scripts
+
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+  
+    <script>
+        $(document).ready(function () {
+            $('#genderSelect').change(function () {
+                if ($('#genderSelect').val() == 'Single')
+                    $('#aniveryDate').hide();
+
+            })
+            $('.datePicker').datepicker();
+            $('#verif').addClass('active')
+            $('#btnRegister').click(function () {
+                $('#verif').removeClass('active')
+                $('#reg').removeClass('active')
+                $('#pay').addClass('active')
+            })
+            $('#btnPayPrevious').click(function () {
+                $('#verif').removeClass('active')
+                $('#pay').removeClass('active')
+                $('#reg').addClass('active')
+            })
+            $('#btnGetOTP').click(function () {
+                var phoneNumber = $('#PhoneNummber').val();
+                if (phoneNumber != '') {
+                    $.getJSON('@Url.Action("getOTP", "WalkinCustomers")', { id: phoneNumber }, function (data) {
+                        if (data.Sent)
+                            toastr.success("OTP has been sent to the Mobile Number The OTP Expires in Minutes", "OTP Sent", { positionClass: "toast-top-center" })
+                        else
+                            toastr.warning("Checking the Mobile Number and Try Again", "OTP Sending Failed", { positionClass: "toast-top-center" })
+                    })
+                }
+                else {
+                    toastr.warning('Phone Number No Entered or Invalid', 'Phone Number', { positionClass: "toast-top-center" })
+                }
+            })
+
+            $('#btnVerify').click(function () {
+                var verifCode = $('#verifCode').val();
+                var pn = $('#PhoneNummber').val();
+                var fName = $('#fName').val();
+                var lName = $('#lName').val();
+                if (verifCode != '' && fName != '') {
+                    if (verifCode == $.cookie('OTP')) {
+                        $('#pn').val(pn)
+                        $('#fn').val(fName)
+                        $('#ln').val(lName)
+                        $('#dPn').html(pn)
+                        $('#dFn').html('<b style="font-size:large">' + fName + '<b>')
+                        $('#dLn').html('<b style="font-size:large">' + lName + '<b>')
+                        $('.nav-tabs a[href="#Registration"]').tab('show');
+                        toastr.success("Verification Completed", "Success", { positionClass: "toast-top-center" })
+                    }
+                    else {
+                        toastr.error('Verification Failed', 'ERROR', { positionClass: "toast-top-center" })
+                    }
+                }
+                else {
+                    toastr.warning('All fields are Mandatory', 'Fill Manadatory Fields', { positionClass: "toast-top-center" })
+                }
+            })
+
+            $('#ddlCardType').change(function () {
+                var cardType = $(this).val();
+                var table = $('#tblCardType');
+                table.show()
+                $.getJSON("@Url.Action("getCardInfo")", { id: cardType }, function (data) {
+                    
+                    var dataTab = table.DataTable({
+                        retrieve: true,
+                        data: data,
+                        sorting: false,
+                        searching: false,
+                        paging: false,
+                        columns: [
+                            {
+                                data: "Type"
+                            },
+                            {
+                                data: "value"
+                            },
+                            {
+                                data: "discount"
+                            }
+                        ]
+                    });
+
+                    dataTab.destroy()
+                })
+            })
+
+            $('#Total').html($('#dCv').html());
+            $('#WalkinForm').submit(function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if ($('#WalkinForm').valid()) {
+                    var data = new FormData($('#WalkinForm').get(0));
+                    var action = $('#WalkinForm').attr('action');
+                    $('.loading').show();
+                    $.ajax({
+                        data: data,
+                        url: action,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                $('#dCn').html(result.data.CardNumber)
+                                $('#dCv').html(result.data.Value)
+                                $('#dCt').html(result.data.CardType)
+                                $('#dPin').html(result.data.PIN)
+                                $('#Total').html(result.data.Value)
+                                $('.nav-tabs a[href="#Confirmation"]').tab('show');
+                            }
+                        }, error: function () {
+                            toastr.error("Server Error", "Error", {positionClass:"toast-top-center"})
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+}
+

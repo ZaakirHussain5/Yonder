@@ -1,0 +1,102 @@
+﻿@model Yonder.Models.Package
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    New Package
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        <div class="panel-group">
+            @using (Ajax.BeginForm("Save", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "PackageForm" }))
+            {
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.CardType, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.CardType, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.CardType, new SelectList(Model.CardTypeCollection, "Type", "Type"), "Select Card Type", new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.Amount, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.Amount, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.Type, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.Type,
+                    new List<SelectListItem> {
+                        new SelectListItem { Text = "Basic", Value = "Basic" },
+                        new SelectListItem { Text = "Special", Value = "Special" } },"Select Package Type",new { @class = "form-control", placeholder = "Enter Package description" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.Desc, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Desc, "", new { @class = "text-danger" })
+                    @Html.TextAreaFor(m => m.Desc, new { @class = "form-control", placeholder = "Enter Package description" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.payAbleAmt, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.payAbleAmt, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.payAbleAmt, new { @class = "form-control" })
+                </div>
+                @Html.HiddenFor(m => m.slno)
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;border-radius:0px;width:100px;margin-left:10px;height:30px;padding:0.5px" />
+                    <button type="reset" class="btn btn-default" style="border-radius:0px;width:100px;height:30px;padding:0.5px">Reset</button>
+
+                </div>
+            }
+        </div>
+    </div>
+    <div class="panel-footer">
+        @Html.ActionLink("<- Back to List", "Index");
+    </div>
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#PackageForm").submit(function (event) {
+                var dataString;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var action = $("#PackageForm").attr("action");
+                dataString = new FormData($("#PackageForm").get(0));
+                contentType = false;
+                processData = false;
+
+                if ($("#PackageForm").valid()) {
+                    $('.loading').show();
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        data: dataString,
+                        dataType: "json",
+                        contentType: contentType,
+                        processData: processData,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                toastr.success(result.Message, "Success", { positionClass: "toast-top-center" })
+                            }
+                            else
+                                toastr.error(result.Message, "Error", { positionClass: "toast-top-center" })
+                        },
+                        error: function () {
+                            toastr.error("Server Error", "Error", { positionClass: "toast-top-center" })
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

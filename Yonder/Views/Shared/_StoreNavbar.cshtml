@@ -1,0 +1,55 @@
+﻿
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="@Url.Action("Index", "StoreHome")">
+                <img alt="List View" src="@Url.Content("~/Content/Images/Main_logo_Yonder.png")" class="img-responsive resize-image" />
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-center">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Masters <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Store Profile", "Profile", "StoreHome", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Categories", "Index", "StoreCategory", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("UOM", "Index", "UOM", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("GST", "Index", "GST", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Supliers", "Index", "StoreSupplier", null, new { @class = "dropdown-item" })</li>
+                    </ul>
+                </li>
+                <li>
+                    @Html.ActionLink("Item Inventory", "Index", "StoreInventory", null, new { @class = "strong-link" })
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> GRN <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Purchace Details", "Index", "Purchase", null, new { @class = "dropdown-item" })</li>
+                        <li>@Html.ActionLink("Suplier Credits", "Manage", "Billing", null, new { @class = "dropdown-item" })</li>
+                    </ul>
+                </li>
+                <li>
+                    @Html.ActionLink("Sales", "Index", "Menu", null, new { @class = "strong-link" })
+                </li>
+                <li >
+                    @Html.ActionLink("Payment Register", "Index", "Menu", null, new { @class = "strong-link" })
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome @Html.Action("GetStoreName", "StoreHome") <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>@Html.ActionLink("Update Profile", "Index", "ShopHome")</li>
+                        <li class="divider"></li>
+                        <li>@Html.ActionLink("Logout", "Logout", "AdminHome")</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,410 @@
+﻿@model Yonder.Models.Shop
+
+@{
+    ViewBag.Title = "Shop Registration";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h3
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;margin-top:20px">
+    Shop Registration
+</h3>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "ShopRegistration",null, new AjaxOptions { HttpMethod = "POST" }, new { id="shopRegForm"}))
+        {
+            @Html.AntiForgeryToken()
+    <div class="panel with-nav-tabs panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#New" data-toggle="tab"> New</a></li>
+                <li><a href="#List" data-toggle="tab">Shops List</a></li>
+                <li class="sr-only"><a href="#payment" data-toggle="tab">Payment</a></li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="New">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <h5 class="panel-heading">
+                                    Primary Details
+                                </h5>
+                                <div class="panel-body row">
+                                    <div class="form-group col-md-12">
+                                        @Html.LabelFor(m => m.category, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.category, "", new { @class = "text-danger" })
+                                        @Html.DropDownListFor(m => m.category, new SelectList(Model.shopCategories, "FloorType", "FloorType"), "Select Shop Category", new { @class = "form-control" ,id="CatSelect" })
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        @Html.LabelFor(m => m.ShopNumber, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.ShopNumber, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.ShopNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Shop Number" } })
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        @Html.LabelFor(m => m.RegistrationNumber, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.RegistrationNumber, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.RegistrationNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Registration Number" } })
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        @Html.LabelFor(m => m.GSTNumber, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.GSTNumber, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.GSTNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter GST Number" } })
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Email Address" } })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.name, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.name, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Shop Name" } })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.Owner, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.Owner, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.Owner, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Shop Owner Name" } })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.MobileNumber, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.MobileNumber, "", new { @class = "text-danger" })
+                                        @Html.EditorFor(m => m.MobileNumber, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Mobile Number" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="LegalDiv">
+                            <div class="col-md-3">
+                                <div class="panel panel-default">
+                                    <h5 class="panel-heading">
+                                        <a href="#" data-toggle="popover" title="Info" data-content="Bank Details for Vendors" data-trigger="hover" style="font-weight:normal">Bank Details</a>
+</h5>
+                                    <div class="panel-body row">
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.Bank, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.Bank, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.Bank, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Bank Name" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.branch, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.branch, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.branch, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Branch Name" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.Account_Number, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.Account_Number, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.Account_Number, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Account Number" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.IFSC, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.IFSC, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.IFSC, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter IFCS Code" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="panel panel-default">
+                                    <h5 class="panel-heading">
+                                        Contact Details
+                                    </h5>
+                                    <div class="panel-body row">
+                                        
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.optional_cont_number, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.optional_cont_number, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.optional_cont_number, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Optional Contact Number" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.Address, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Recuring Address" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.Permanent_Address, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.Permanent_Address, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.Permanent_Address, new { htmlAttributes = new Dictionary<string, object>() { { "class", "form-control storeRemoveRequired" }, { "placeholder", "Enter Permanent Address" } } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <h5 class="panel-heading">
+                                        <a href="#" data-toggle="popover" title="Info" data-content="This is meant only for Shops where Vendors Offer Service" data-trigger="hover" style="font-weight:normal">
+                                            Policy Details
+                                        </a>
+                                    </h5>
+                                    <div class="panel-body row">
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.ShopType, new { @class = "control-label" })
+                                            <a href="#" data-toggle="popover" title="Info" data-content="This is meant only for Food Court Shops" data-trigger="hover"><i class="glyphicon glyphicon-info-sign text-info"></i></a>
+                                            @Html.ValidationMessageFor(m => m.ShopType, "", new { @class = "text-danger" })
+                                            @Html.DropDownListFor(m => m.ShopType, new SelectList(Model.shopTypes, "shopType", "shopType"), "Select Cuisine Type", new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            @Html.LabelFor(m => m.CommenceDate, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.CommenceDate, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.CommenceDate, new { htmlAttributes = new { @class = "form-control datepicker storeRemoveRequired", placeholder = "Enter Commence Date" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            @Html.LabelFor(m => m.launch_cert_date, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.launch_cert_date, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.launch_cert_date, new { htmlAttributes = new { @class = "form-control datepicker storeRemoveRequired", placeholder = "Enter Launch Certificate date" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.deposit_intrst, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.deposit_intrst, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.deposit_intrst, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Deposit Interest" } })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            @Html.LabelFor(m => m.partner_need_percent, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.partner_need_percent, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(m => m.partner_need_percent, new { htmlAttributes = new { @class = "form-control storeRemoveRequired", placeholder = "Enter Partner Need Percentage" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if(Model.ShopNumber==0)
+                        { 
+                        <div class="form-group col-md-12">
+                            <div>
+                                <input type="submit" value="Register" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnSubmit" />
+                                <button type="reset" class="btn btn-default" style="width: 120px">Reset</button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="payment">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <h4 class="panel-heading">
+                                    Shop Name
+                                </h4>
+                                <div class="panel-body">
+                                    <label id="dSn"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <h4 class="panel-heading">
+                                    Owner Name
+                                </h4>
+                                <div class="panel-body">
+                                    <label id="dOn"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <h4 class="panel-heading">
+                                    Phone Number
+                                </h4>
+                                <div class="panel-body">
+                                    <label id="dPn"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <h2 class="panel-heading">Payment</h2>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>Commence Date</th>
+                                    <td id="dCd"></td>
+                                </tr>
+                                <tr>
+                                    <th>Launch Certifiaction date</th>
+                                    <td id="dCn"></td>
+                                </tr>
+                                <tr>
+                                    <th>Re-Fundable Advance</th>
+                                    <td id="dRa"></td>
+                                </tr>
+                                <tr>
+                                    <th>Partner Need Pecentage</th>
+                                    <td id="dPnp"></td>
+                                </tr>
+                                <tr>
+                                    <th>Payment Mode</th>
+                                    <td>
+                                        <select class="form-control">
+                                            <option value="">Select Payment Mode</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="UPI">UPI</option>
+                                            <option value="Mobile Banking">Mobile Banking</option>
+                                            <option value="Net Banking">Net Banking</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="panel-footer">
+                                    <th>Total</th>
+                                    <td id="Total"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <center>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" style="background-color:#ffda0f;width:120px" id="btnSubmitEnd">Pay Now</button>
+                        </div>
+                    </center>
+                </div>
+                <div class="tab-pane fade" id="List">
+                    <a href="@Url.Action("Index", "ShopRegistration")" class="btn btn-default btn-lg" style="background-color:#ffda0f;width:auto;margin-bottom:10px"><i class="glyphicon glyphicon-plus-sign"></i> New Shop Registration</a>
+                    <table class="table table-bordered table-hover" id="Shops">
+                        <thead>
+                            <tr>
+                                <th>Shop No.</th>
+                                <th>Shop Name</th>
+                                <th>Owner Name</th>
+                                <th>Registration No.</th>
+                                <th>Email</th>
+                                <th>Commencement Date</th>
+                                <th>Launch Certicate Date</th>
+                                <th>Expiration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        }
+    </div>
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.datepicker').datepicker()
+            $('[data-toggle="popover"]').popover();
+            var table = $('#Shops').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetShops", "ShopRegistration")',
+                    dataSrc:""
+                },
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, "All"]],
+                order: [[ 1, 'asc' ]],
+                columns: [
+                    {
+                        data:'ShopNumber'
+                    },
+                    {
+                        data: 'name',
+                        render:function(data, type, shop){
+                            return "<a href='/ShopRegistration/Details/" + shop.ShopNumber + "'>" + data + "</a>";
+                        }
+                    },
+                    {
+                        data: 'Owner'
+                    },
+                    {
+                        data: 'RegistrationNumber'
+                    },
+                    {
+                        data: 'Email'
+                    },
+                    {
+                        data:'CommenceDate'
+                    },
+                    {
+                        data: "launch_cert_date"
+                    },
+                    {
+                        data: 'Policy_Exp_Date'
+                    }
+                ]
+            });
+
+            $('#Shops_filter input').addClass('form-control');
+            $('.dataTables_length select').addClass('form-control');
+
+            $('#shopRegForm').submit(function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if ($('#shopRegForm').valid()) {
+                    var action = $('#shopRegForm').attr('action');
+                    var data = new FormData($('#shopRegForm').get(0));
+                    $('.loading').show();
+                    $.ajax({
+                        type: 'POST',
+                        url: action,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.Success) {
+                                table.ajax.reload();
+                                $('#dSn').html(result.data.name)
+                                $('#dPn').html(result.data.MobileNumber)
+                                $('#dOn').html(result.data.Owner)
+                                $('#dCd').html(result.data.CommenceDate)
+                                $('#dCn').html(result.data.launch_cert_date)
+                                $('#dRa').html(result.data.deposit_intrst)
+                                $('#dPnp').html(result.data.partner_need_percent)
+                                $('#Total').html(result.data.partner_need_percent)
+                                $('.nav-tabs a[href="#payment"]').tab('show');
+                            }
+                            else {
+                                toastr.error(result.Message, "Error", { positionClass: 'toast-top-center' })
+                            }
+                        },
+                        error: function () {
+                            toastr.error('Server Error', "Error", { positionClass: 'toast-top-center' })
+                        }
+
+                    })
+                }
+            })
+
+            $('#btnPay').click(function () {
+                if ($('#mop').val() !== '' && $('#mop').val() !== 'Cash') {
+                    var options = {
+                        "key": "rzp_test_zCx9olD0f564YC", // Enter the Key ID generated from the Dashboard
+                        "amount": $('#Total').html()*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise or INR 500.
+                        "currency": "INR",
+                        "name": "Yonder",
+                        "description": "The Social Hub",
+                        "image": "@Url.Content("~/Content/Images/Main_logo_Yonder.png")",//This is a sample Order ID. Create an Order using Orders API. (https://razorpay.com/docs/payment-gateway/orders/integration/#step-1-create-an-order). Refer the Checkout form table given below
+                        "handler": function (response) {
+                            console.log(response);
+                            toastr.success("Payment Processed Successfully", "Success", {positionClass:"toast-top-center"})
+                        },
+                        "prefill": {
+                            "name":$('#fn').val() + ' ' + $('#ln').val(),
+                            "email": "user@example.com",
+                            "contact": $('#pn').val()
+                        },
+                        "theme": {
+                            "color": "#ffda0f"
+                        }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+            })
+        })
+    </script>
+    }
+
+                

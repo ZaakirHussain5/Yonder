@@ -1,0 +1,80 @@
+﻿@model Yonder.ViewModels.CompanyProfileViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="container margin-top-20">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card hovercard">
+                <div class="cardheader">
+                </div>
+                <div class="avatar">
+                    <img alt="" src="@Url.Content(Model.Company.Logo)">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a target="_blank" href="#">@Model.Company.company</a>
+                    </div>
+                    <div class="desc">@Model.Company.headOffice</div>
+                    <div class="desc">@Model.Company.State</div>
+                    <div class="desc">@Model.Company.City</div>
+                    <div class="desc">@Model.Company.Website</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-sm-6">
+            <h2 style="background-color:#F7D031;padding:15px 15px 15px 15px;">Branches</h2>
+            <div class="panel panel-default">
+                
+                <div class="panel-body">
+                    <a href="@Url.Action("New", "Branch", new { CompanyId=@Model.Company.id})" style="background-color:#ffda0f" class="btn btn-default">
+                        <i class="glyphicon glyphicon-plus-sign"></i> Add New Barnch
+                    </a>
+                    <table class="table table-bordered table-hover" id="branches">
+                        <thead>
+                            <tr>
+                                <th>Branch Name</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Contact Person</th>
+                                <th>Mobile Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var profile in Model.Profile)
+                            {
+                                <tr>
+                                    <td>@profile.BranchName</td>
+                                    <td>@profile.Address</td>
+                                    <td>@profile.Email</td>
+                                    <td>@profile.ContactPerson</td>
+                                    <td>@profile.MobileNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $('#branches').DataTable({
+            lengthMenu: [[5, 10, 25, -1], [5, 10, 20, "All"]],
+            responsive:true
+        })
+        $('#branches_filter input').addClass('form-control');
+        $('.dataTables_length select').addClass('form-control');
+    </script>
+   
+
+}
+

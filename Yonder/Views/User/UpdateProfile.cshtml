@@ -1,0 +1,283 @@
+﻿@model Yonder.Models.CardRegistration
+@{
+    ViewBag.Title = "UpdateProfile";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+<style>
+    #contact .form-control:focus {
+        border-bottom: 1px solid #000000;
+    }
+
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        color: red;
+        opacity: 1 !important;
+    }
+</style>
+<section id="home" class="slider" data-stellar-background-ratio="0.5">
+    <div class="row">
+        <div class="item item-first" style="height: 250px;background-image:url('../../Content/Customer/images/ent.jpg')">
+            <div class="caption">
+                <div class="container">
+                    <div class="col-md-8 col-sm-12">
+                        <h1>Profile</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" data-stellar-background-ratio="0.5">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-4 col-lg-3">
+
+                <section class="panel">
+                    <div class="panel-body">
+                        <div class="thumb-info mb-md">
+                            <div class="thumb-info-title">
+                                <span class="thumb-info-inner">@Model.Name</span>
+                                <span class="thumb-info-type" style="color:black;font-family:'Comic Sans MS'">@Model.CardType</span>
+                            </div>
+                        </div>
+
+                        <div class="widget-toggle-expand mb-md">
+                            <div class="widget-header">
+                                <h6>Profile Completion</h6>
+                            </div>
+                            <div class="widget-content-collapsed">
+                                <div class="progress progress-xs light">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="@Html.Action("Profile", "User")" aria-valuemin="0" aria-valuemax="100" style="width: @Html.Action("Profile", "User")%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-8 col-lg-6">
+
+                <div class="tabs">
+                    <ul class="nav nav-tabs tabs-primary">
+                        <li class="active">
+                            <a href="#UpdateProfile" data-toggle="tab">Update Profile</a>
+                        </li>
+                        <li>
+                            <a href="#UpdatePin" data-toggle="tab">Change Pin</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="UpdateProfile" class="tab-pane active">
+                            @using (Ajax.BeginForm("UpdateProfile", null, new AjaxOptions { HttpMethod = "post" }, new { id = "UpdateProfileForm" }))
+                            {
+                                <h4 class="mb-xlg">Profile Details</h4>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                                            @Html.ValidationMessageFor(m => m.Name, "", new { @class="text-danger" })
+                                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Your Name" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Your Email" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            @Html.ValidationMessageFor(m => m.birthDate, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.birthDate, new { @class = "form-control", placeholder = "Your DOB",type="date" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                                            @Html.TextAreaFor(m => m.Address, new { @class = "form-control", placeholder = "Your Name", style = "height:60px" })
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-md-9" id="submitDiv">
+                                            <button type="submit" class="btn" id="cf-submit">Update Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div id="UpdatePin" class="tab-pane">
+                            <h4 class="mb-xlg">Change Pin</h4>
+                            @using (Ajax.BeginForm("UpdatePin", null, new AjaxOptions { HttpMethod = "post" }, new { id = "UpdatePinForm" }))
+                            {
+                                <fieldset class="mb-xl">
+                                    <div class="sr-only error alert alert-danger">
+                                        Passwords Don't Match
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <input type="password" class="form-control" id="profileoldPassword" required placeholder="Old Pin">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <input type="password" class="form-control" id="newPassword" required placeholder="New Pin">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <input type="password" class="form-control" id="cNewPassword" required placeholder="Re-type New Pin">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="panel-footer">
+                                    <div class="row">
+                                        <div class="col-md-9" id="submitPinDiv">
+                                            <button type="submit"  class="btn btn-danger" id="cf-submit1">Update Pin</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-3">
+
+                <ul class="simple-card-list mb-xlg">
+                    <li class="info">
+                        <p style="color:white">Available Balance</p>
+                        <h3 style="color:white"><fa class="fa fa-inr"></fa> @Model.Balance</h3>
+                    </li>
+                    <li class="danger">
+                        <a href="#" data-toggle="modal" data-target="#blockModal">
+                            <h3 style="color:white;padding:10px"><i class="fa fa-ban"></i> Block Card</h3>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<div class="modal fade" id="blockModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Block Reason
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <select class="form-control">
+                        <option>Select Reason</option>
+                        <option>Lost Card</option>
+                        <option>Broke Card</option>
+                        <option>Not Interested</option>
+                        <option>Card Stolen</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">
+                    <i class="fa fa-ban"></i> Block Now
+                </button>
+
+                <button type="button" data-dismiss="modal" class="btn btn-default">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $('#UpdateProfileForm').submit(function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var data = new FormData($('#UpdateProfileForm').get(0));
+                var url = $('#UpdateProfileForm').attr('action')
+                if ($('#UpdateProfileForm').valid()) {
+                    var submitBtn = $('#submitDiv').html();
+                    $('#submitDiv').html
+                        (
+                        '<button disabled="disabled" type="button" id="cf-submit">' +
+                         '<i class="fa fa-circle-o-notch fa-spin"></i> Loading'+
+                         '</button>'
+                        )
+                    $.ajax({
+                        url: url,
+                        data: data,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            $('#submitDiv').html(submitBtn)
+                            if (result.success) {
+                                toastr.success(result.Message, 'Success', {positionClass:"toast-bottom-left"})
+                            }
+                            else {
+                                toastr.error(result.Message, 'Error', { positionClass: "toast-bottom-left" })
+                            }
+                        },
+                        error: function () {
+                            $('#submitDiv').html(submitBtn);
+                            toastr.error('Server Error', 'Error', { positionClass: "toast-bottom-left" })
+                        }
+                    })
+                }
+            })
+
+            $('#UpdatePinForm').submit(function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var data = new FormData($('#UpdatePinForm').get(0));
+                var url = $('#UpdatePinForm').attr('action')
+                if ($('#UpdatePinForm').valid()) {
+                    if ($('#newPassword').val() != $('#cNewPassword').val()) {
+                        $('.error').removeClass('sr-only')
+                        return false;
+                    } else {
+                        $('.error').addClass('sr-only')
+                        var submitBtn = $('#submitPinDiv').html();
+                        $('#submitPinDiv').html
+                            (
+                            '<button disabled="disabled" type="button" id="cf-submit">' +
+                             '<i class="fa fa-circle-o-notch fa-spin"></i> Loading' +
+                             '</button>'
+                            )
+                        $.ajax({
+                            url: url,
+                            data:  JSON.stringify({pin:$('#newPassword').val()}),
+                            type: 'POST',
+                            contentType: 'application/json',
+                            success: function (result) {
+                                $('#submitPinDiv').html(submitBtn)
+                                if (result.success) {
+                                    toastr.success(result.Message, 'Success', { positionClass: "toast-bottom-left" })
+                                }
+                                else {
+                                    toastr.error(result.Message, 'Error', { positionClass: "toast-bottom-left" })
+                                }
+                            },
+                            error: function () {
+                                $('#submitPinDiv').html(submitBtn);
+                                toastr.error('Server Error', 'Error', { positionClass: "toast-bottom-left" })
+                            }
+                        })
+                    }
+                }
+            })
+
+        })
+    </script>
+
+}
+

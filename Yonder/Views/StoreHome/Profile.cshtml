@@ -1,0 +1,111 @@
+﻿@model Yonder.Models.Shop
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/StoreHome/_StoreHome.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+<h2 class="col-md-10 col-md-offset-1 margin-top-20" style="background-color:#F7D031;padding:15px 15px 15px 15px;">Update Profile</h2>
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        @using (Ajax.BeginForm("Save", "ShopProfile", null, new AjaxOptions { HttpMethod = "Post" }, new { id = "UpdateShopForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.name, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.name, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Shop Name" } })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.Owner, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Owner, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.Owner, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Owner Name" } })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Email Address", @readonly = "" } })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.MobileNumber, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.MobileNumber, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.MobileNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Mobile Number", @readonly = "" } })
+                </div>
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.optional_cont_number, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.optional_cont_number, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.optional_cont_number, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Optional Contact numkber", id = "PinCode" } })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Recuring Address" } })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.Permanent_Address, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Permanent_Address, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.Permanent_Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Permanent Address" } })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.RegistrationNumber, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.RegistrationNumber, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.RegistrationNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Registration Number" } })
+                </div>
+                <div class="form-group col-md-6">
+                    @Html.LabelFor(m => m.GSTNumber, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.GSTNumber, "", new { @class = "text-danger" })
+                    @Html.EditorFor(m => m.GSTNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter GST Number" } })
+                </div>
+                @Html.HiddenFor(m => m.ShopNumber)
+                <div class="form-group col-md-12">
+                    <div class="">
+                        <input type="submit" value="Update" class="btn btn-default" style="background-color:#ffda0f;width:120px" />
+                        <button type="reset" class="btn btn-default" style="width:120px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(document).ready(function () {
+        $('#UpdateShopForm').submit(function () {
+            if ($('#UpdateShopForm').valid()) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var data = new FormData($('#UpdateShopForm').get(0))
+                var action = $('#UpdateShopForm').attr('action')
+                $('.loading').show();
+                $.ajax({
+                    type: 'POST',
+                    data: data,
+                    url: action,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        $('.loading').hide();
+                        if (result.Success) {
+                            toastr.success(result.Message, "Success", {positionClass:"toast-top-center"})
+                        }
+                        else {
+                            toastr.error(result.Message, "Error", { positionClass: "toast-top-center" })
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Server Error", "Error", { positionClass: "toast-top-center" })
+                    }
+
+                })
+            }
+        })
+    })
+    </script>
+}

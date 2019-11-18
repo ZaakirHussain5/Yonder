@@ -1,0 +1,93 @@
+﻿@model Yonder.Models.Category
+
+@{
+    ViewBag.Title = "Categories";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+<div class="loading" style="display:none">Loading</div>
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Category Images
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+
+        <div class="tab-pane fade in active" id="Recharge">
+            <div class="panel-group">
+                @using (Ajax.BeginForm("Categories", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "CategoryForm" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.category, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.category, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(m => m.category, new SelectList(Model.categoriesList, "category", "category"), "Select Category", new { @class = "form-control", id = "ddlshop" })
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label" for="ImageFile">
+                                Upload Image
+                            </label>
+                            <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input class=" btn btn-default" style="background-color:#ffd800" type="submit" value="Update Image" />
+                        </div>
+                   </div>
+                        
+                    
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#CategoryForm').submit(function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                var action = $("#CategoryForm").attr("action");
+                var data = new FormData($("#CategoryForm").get(0))
+                if (document.getElementById("ImageFile").files.length !== 0)
+                    var file = document.getElementById("ImageFile").files[0];
+                data.append("ImageFile", file)
+                if ($('#CategoryForm').valid()) {
+                    $('.loading').show();
+                    $.ajax({
+                        url: action,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (result) {
+                            if (result.success) {
+                                $('.loading').hide();
+                                toastr.success(result.message, "Success", { positionClass: 'toast-top-center' })
+                            }
+                            else {
+                                $('.loading').hide();
+                                toastr.error(result.message, "Error", { positionClass: 'toast-top-center' })
+                            }
+                        },
+                        error: function (result) {
+                            $('.loading').hide();
+                            toastr.error("Server Error", "Error", { positionClass: 'toast-top-center' })
+                        }
+                    })
+                }
+
+            })
+        })
+    </script>
+    }
+

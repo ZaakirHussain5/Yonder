@@ -1,0 +1,155 @@
+﻿@model Yonder.Models.Refund
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Refund
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+
+    <div class="panel-body">
+
+        <div class="tab-pane fade in active" id="Recharge">
+            <div class="panel-group">
+                @using (Ajax.BeginForm("Refund", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "RefundForm" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.cardNumber, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.cardNumber, "", new { @class = "text-danger" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.cardNumber, new { @class = "form-control", id = "cardnumber" })
+                                <span class="input-group-btn">
+                                    <button type="button" id="Validate" class="btn btn-default" style="background-color:#F7D031;margin-left:5px">Validate</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            @Html.LabelFor(m => m.Reason, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.Reason, "", new { @class = "text-danger" })
+                            @Html.TextAreaFor(m => m.Reason, new { @class = "form-control",placeholder="Enter refund Reason" })
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div id="bank" class="panel panel-default ">
+                                <h5 class="panel-heading">Bank Details</h5>
+                                <div class="panel-body">
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.Bank, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.Bank, "", new { @class = "text-danger" })
+                                        @Html.TextBoxFor(m => m.Bank, new { @class = "form-control", placeholder = "Enter Bank Name" })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.acc_name, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.acc_name, "", new { @class = "text-danger" })
+                                        @Html.TextBoxFor(m => m.acc_name, new { @class = "form-control", placeholder = "Enter Accountant Name" })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        @Html.LabelFor(m => m.acc_number, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.acc_number, "", new { @class = "text-danger" })
+                                        @Html.TextBoxFor(m => m.acc_number, new { @class = "form-control", placeholder = "Enter Account Number" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(m => m.Branch, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.Branch, "", new { @class = "text-danger" })
+                                        @Html.TextBoxFor(m => m.Branch, new { @class = "form-control", placeholder = "Enter Branch Name" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(m => m.ifsc, new { @class = "control-label" })
+                                        @Html.ValidationMessageFor(m => m.ifsc, "", new { @class = "text-danger" })
+                                        @Html.TextBoxFor(m => m.ifsc, new { @class = "form-control", })
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                  
+                    @Html.HiddenFor(m => m.refundId)
+                    @Html.HiddenFor(m => m.cardType, new { id = "cardType" })
+                    <div class="form-group col-md-12">
+                        <input type="submit" value="Send Request" class="btn btn-default" style="background-color:#ffda0f;border-radius:0px;width:100px;margin-left:10px;height:30px;padding:0.5px" />
+                        <button type="reset" class="btn btn-default" style="border-radius:0px;width:100px;height:30px;padding:0.5px">Reset</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+</div>
+
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#Validate').click(function () {
+                var CardNumber = $('#cardnumber').val();
+                var subItems = '<option value="">Select Amount</option>';
+                $.getJSON('@Url.Action("validateCard","EmployeeRegistration")', { id: CardNumber }, function (data) {
+                    if (data.isValid) {
+                        toastr.success("Card Number is Valid Proceed to Refund", "Validated", { positionClass: "toast-top-center" });
+                        $('#cardType').val(data.data.CardType);
+                        if (data.data.userType != 'Walkin')
+                            $('#bank').hide();
+                        else
+                            $('#bank').show();
+                    }
+                    else {
+                        toastr.warning("Invalid Card Number check the Card Number and try again ", "Invalid Card", { positionClass: "toast-top-center" })
+                    }
+
+
+                })
+            })
+
+            $("#RefundForm").submit(function (e) {
+                if ($("#RefundForm").valid()) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var data = new FormData($("#RefundForm").get(0));
+                    var action = $("#RefundForm").attr('action')
+                    $('.loading').show();
+                    $.ajax({
+                        url: action,
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.success) {
+                                $("#RefundForm").trigger("reset");
+                                $('#cardnumber').focus();
+                                toastr.success(result.message, "Success", { positionClass: "toast-top-center" });
+                            }
+                            else {
+                                toastr.error(result.message, "Error", { positionClass: "toast-top-center" });
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Server Error", "Error", { positionClass: "toast-top-center" });
+                        }
+
+                    })
+                }
+                return false;
+
+            })
+        })
+    </script>
+
+}
+
+

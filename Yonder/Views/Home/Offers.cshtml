@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Yonder.Models.offerGroup>
+@{
+    ViewBag.Title = "Offers";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<section id="home" class="slider" data-stellar-background-ratio="0.5">
+    <div class="row">
+        <div class="item item-fourth" style="height: 250px;background-image:url('../../Content/Customer/images/slider-image2.jpg')">
+            <div class="caption">
+                <div class="container">
+                    <div class="col-md-8 col-sm-12">
+                        <h1>OFFERS</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@if (Model == null)
+{
+    <label class="warning">No Offers at the Moment</label>
+}
+else
+{
+    foreach (var offerGroup in Model)
+    {
+        <section id="team" data-stellar-background-ratio="0.5">
+            <div class="container">
+                <div class="col-md-12 col-sm-12">
+                    <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+                        <h2>@offerGroup.category</h2>
+                        <h4></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach (var offer in offerGroup.offers)
+            {
+                    <div class="col-md-4 col-sm-4">
+                        <div class="team-thumb" data-wow-delay="0.2s">
+                            <img src="@offer.Image" class="img-responsive grid-wellness-img" alt="">
+                        </div>
+                    </div>
+            }
+                </div>
+            </div>
+        </section>
+    }
+}
+
+
+
+
+

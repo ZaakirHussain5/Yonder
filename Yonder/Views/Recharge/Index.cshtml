@@ -1,0 +1,153 @@
+﻿@model Yonder.Models.Recharge
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20 col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Recharge
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+
+        <div class="tab-pane fade in active" id="Recharge">
+            <div class="panel-group">
+                @using (Ajax.BeginForm("Recharge", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "RechargeForm" }))
+                    {
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(m => m.CardNumber, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", id = "cardnumber" })
+                        <span class="input-group-btn">
+                            <button type="button" id="Validate" class="btn btn-default" style="background-color:#F7D031;margin-left:5px">Validate</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.Amount, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.Amount, new SelectList(Model.Packages, "Amount", "Amount"), "Select Amount", new { @class = "form-control", id = "planList" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Package description", id = "desc" })
+                </div>
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(m => m.RechargedBy, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(m => m.RechargedBy, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(m => m.RechargedBy, new { @class = "form-control", })
+                </div>
+                @Html.HiddenFor(m => m.rechargeId)
+                @Html.HiddenFor(m => m.CardType, new { id = "cardType" })
+                <div class="form-group col-md-12">
+                    <input type="submit" value="Submit" class="btn btn-default" style="background-color:#ffda0f;border-radius:0px;width:100px;margin-left:10px;height:30px;padding:0.5px" />
+                    <button type="reset" class="btn btn-default" style="border-radius:0px;width:100px;height:30px;padding:0.5px">Reset</button>
+                </div>
+                    }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Validate').click(function () {
+                var CardNumber = $('#cardnumber').val();
+                var subItems = '<option value="">Select Amount</option>';
+                $.getJSON('@Url.Action("validateCard","EmployeeRegistration")', { id: CardNumber }, function (data) {
+                    if (data.isValid) {
+                        toastr.success("Card Number is Valid Proceed to Recharge", "Validated", { positionClass: "toast-top-center" });
+                        $('#cardType').val(data.data.CardType);
+                        $.getJSON("@Url.Action("getPlans", "Recharge")", { id: data.data.CardType }, function (data) {
+                            $.each(data, function (index, item) {
+                                subItems += "<option value='" + item.Amount + "'>" + item.Amount + "</option>"
+                            });
+                            $("#planList").html(subItems)
+                        });
+                    }
+                    else {
+                        toastr.warning("Invalid Card Number check the Card Number and try again ", "Invalid Card", { positionClass: "toast-top-center" })
+                    }
+                
+                
+                })
+            })
+
+            $("#planList").change(function () {
+                var plan = $(this).val();
+                $.getJSON("@Url.Action("getPlansDetails", "Recharge")", { id: plan }, function (data) {
+                    $("#desc").val(data.Desc)
+                });
+            })
+
+            $("#RechargeForm").submit(function (e) {
+                if ($("#RechargeForm").valid()) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    var data = new FormData($("#RechargeForm").get(0));
+                    var action = $("#RechargeForm").attr('action')
+                    $('.loading').show();
+                    $.ajax({
+                        url: action,
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.success) {
+                                toastr.success(result.message, "Success", { positionClass: "toast-top-center" });
+                            }
+                            else {
+                                toastr.error(result.message, "Error", { positionClass: "toast-top-center" });
+                            }
+                        },
+                        error: function () {
+                            toastr.error("Server Error", "Error", { positionClass: "toast-top-center" });
+                        }
+
+                    })
+                }
+               
+            })
+
+            $('#btnPay').click(function () {
+                if ($('#mop').val() !== '' && $('#mop').val() !== 'Cash') {
+                    var options = {
+                        "key": "rzp_test_zCx9olD0f564YC", // Enter the Key ID generated from the Dashboard
+                        "amount": $('#planList').val() * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise or INR 500.
+                        "currency": "INR",
+                        "name": "Yonder",
+                        "description": "The Social Hub",
+                        "image": "@Url.Content("~/Content/Images/Main_logo_Yonder.png")",//This is a sample Order ID. Create an Order using Orders API. (https://razorpay.com/docs/payment-gateway/orders/integration/#step-1-create-an-order). Refer the Checkout form table given below
+                        "handler": function (response) {
+                            console.log(response);
+                            toastr.success("Payment Processed Successfully", "Success", {positionClass:"toast-top-center"})
+                        },
+                        "prefill": {
+                            "name":$('#fn').val() + ' ' + $('#ln').val(),
+                            "email": "user@example.com",
+                            "contact": $('#pn').val()
+                        },
+                        "theme": {
+                            "color": "#ffda0f"
+                        }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            }
+            })
+        })
+    </script>
+
+    }

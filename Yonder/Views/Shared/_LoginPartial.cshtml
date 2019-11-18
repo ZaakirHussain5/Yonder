@@ -1,0 +1,19 @@
+﻿@if (Session["User"] == null)
+{
+    <li><button type="button" class="  btn navbar-btn navbtn btn btn-warning" data-toggle="modal" onclick="openLoginModal();" style="color:white">Member Login</button></li>
+}
+else
+{
+    <li class="dropdown">
+        <button class="dropdown-toggle navbar-btn navbtn btn btn-warning" data-toggle="dropdown" href="javascript:void(0)" style="color:white;text-transform:uppercase">
+            @Html.Action("GreetUser", "Home")
+            <span class="fa fa-user"></span>
+        </button>
+        <ul class="dropdown-menu" style="color:black">
+            <li><a href="/User/UpdateProfile#contact" style="color:black"><span class="fa fa-user"></span> Profile</a></li>
+            <li><a href="/UserTransaction#Trans" style="color:black"><span class="fa fa-credit-card"></span> Transaction</a></li>
+            <li class="divider"></li>
+            <li><a href="/User/Logout" style="color:black"><span class="fa fa-sign-out"></span> Logout</a></li>
+        </ul>
+    </li>
+}

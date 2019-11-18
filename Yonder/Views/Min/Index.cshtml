@@ -1,0 +1,231 @@
+﻿@model Yonder.ViewModels.MaterialInwordViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 style="margin-top:20px;background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Material Inword
+</h2>
+
+<div class="panel panel-default">
+
+    @using (Ajax.BeginForm("Add", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "MatIn" }))
+    {
+        <div class="panel-body">
+            @Html.AntiForgeryToken()
+            <div>
+                <div class="row">
+                    @Html.HiddenFor(m => m.Material_Inword.mi_number, new { id = "mi_number" })
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.inword_From, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword.inword_From, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Material_Inword.inword_From, new { @class = "form-control", placeholder = "Enter Material Inword From", id = "inwordFrom", autofocus = "" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.inword_for, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword.inword_for, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Material_Inword.inword_for, new { @class = "form-control", placeholder = "Enter Inword For", id = "Shop" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.invoiceNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Material_Inword.invoiceNumber, new { @class = "form-control", placeholder = "Enter Invoice Number", id = "invoice" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.inword_By, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword.inword_By, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Material_Inword.inword_By, new { @class = "form-control", placeholder = "", id = "inwordBy" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.mode_of_transport, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Material_Inword.mode_of_transport, new { @class = "form-control", placeholder = "Enter Material Inword From", id = "inwordFrom", autofocus = "" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.vehicle_no, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Material_Inword.vehicle_no, new { @class = "form-control", placeholder = "", id = "inwordBy" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.incharge, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Material_Inword.incharge, new { @class = "form-control", placeholder = "Enter Inword For", id = "Shop" })
+                    </div>
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(m => m.Material_Inword.inc_phoneNumber, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword.inc_phoneNumber, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Material_Inword.inc_phoneNumber, new { @class = "form-control", placeholder = "Enter Invoice Number", id = "invoice" })
+                    </div>
+                </div>
+                <div class="row" id="itemForm">
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Material_Inword_items.particulars, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword_items.particulars, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.Material_Inword_items.particulars, new { @class = "form-control", placeholder = "Enter Particulars" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(m => m.Material_Inword_items.Quantity, new { @class = "control-label" })
+                        @Html.ValidationMessageFor(m => m.Material_Inword_items.Quantity, "", new { @class = "text-danger" })
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Material_Inword_items.Quantity, new { @class = "form-control", placeholder = "Enter Quantity" })
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default w3-margin-left" style="background-color:#ffd800">ADD</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table id="matInItems" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Particulars</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <center>
+                <div class="row">
+                    <a href="@Url.Action("List","Min")" class="btn btn-default" style="background-color:#F7D031;width:150px">View All Inwords</a>
+                    <input type="reset" id="resetbtn" class="btn btn-default" style="width:150px" value="Reset" />
+                </div>
+            </center>
+        </div>
+    }
+
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        var table;
+        var loadTable = function () {
+            table = $('#matInItems').DataTable({
+                ajax: {
+                    url: '/Min/getMatInItems/' + $('#mi_number').val(),
+                    dataSrc: ""
+                },
+                retrieve: true,
+                bInfo: false,
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, "All"]],
+                columns: [
+                    {
+                        data: "particulars"
+                    },
+                    {
+                        data: "Quantity"
+                    },
+                    {
+                        data: "slno",
+                        render: function (data) {
+                            return '<button type="button" class="w3-white btn btn-sm i-delete" data-item-id="'+data+'">' +
+                                '<i class="glyphicon glyphicon-remove text-danger"></i>' +
+                                '</button>'
+                        }
+                    }
+                ]
+            })
+
+            $('#matInItems_filter input').addClass("form-control input-sm")
+            $('.dataTables_length select').addClass("form-control input-sm")
+        }
+
+        $(document).ready(function () {
+            @if (Model.Material_Inword.mi_number != 0)
+            {
+                @:$('#mi_number').val('@Model.Material_Inword.mi_number');
+                @:$('#itemForm').hide();
+                @:loadTable();
+            }
+            
+            $('#resetbtn').click(function () {
+                $('#mi_number').val(0);
+            })
+
+            $("#matInItems").on("click", ".i-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure you want to delete this Item?", function (result) {
+                    if (result) {
+                        var id = button.attr('data-item-id');
+                        $('.loading').show()
+                        $.ajax({
+                            url: '/Min/RemoveItem/' + id,
+                            method: 'post',
+                            success: function (result) {
+                                $('.loading').hide()
+                                if (result.success) {
+                                    table.row(button.parents("tr")).remove().draw()
+                                    toastr.success("Item Deleted Successfully", "Success", { positionClass: "toast-top-center" })
+                                } else {
+                                    toastr.error("Item Deletion failed", "ERROR", { positionClass: "toast-top-center" })
+                                }
+
+                            },
+                            error: function () {
+                                $('.loading').hide()
+                                toastr.error("Server Error", "ERROR", { positionClass: "toast-top-center" })
+                            }
+                        })
+                    }
+                }).find('.modal-content').css({
+                    'margin-top': function () {
+                        var w = $(window).height();
+                        var b = $(".modal-dialog").height();
+                        // should not be (w-h)/2
+                        var h = (w - b) / 3;
+                        return h + "px";
+                    }
+                })
+            })
+            
+
+            $('#MatIn').submit(function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                if ($('#MatIn').valid()) {
+                    var action = $('#MatIn').attr('action')
+                    var data = new FormData($('#MatIn').get(0))
+                    $('.loading').show();
+                    $.ajax({
+                        url: action,
+                        type: 'POST',
+                        data: data,
+                        contentType: false,
+                        processData:false,
+                        success: function (result) {
+                            $('.loading').hide();
+                            if (result.success) {
+                                $('#mi_number').val(result.data.miNumber);
+                                loadTable();
+                                table.ajax.reload();
+                                toastr.success(result.message, "Success", { positionClass: "toast-top-center" });
+                            }
+                            else {
+                                toastr.error(result.message, "Error", { positionClass: "toast-top-center" });
+                            }
+                        },
+                        error: function () {
+                            $('.loading').hide();
+                            toastr.error("Server Error", "Error", { positionClass: "toast-top-center" });
+                        }
+                    })
+                }
+
+
+            });
+        })
+    </script>
+}
+
+

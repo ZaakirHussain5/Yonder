@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+@model Yonder.Models.Login
+<html>
+<head>
+    <title>Admin Login - Yonder</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" href="~/Content/Customer/css/bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/Content/Customer/css/Login.css" />
+    <style>
+            body {
+    background: #007bff;
+    background: linear-gradient(to right, #89f7fe , #a9a06d);
+    }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-xl-9 mx-auto">
+                <div class="card card-signin flex-row" style="margin-top:140px;height:500px">
+                    <div class="card-img-left d-none d-md-flex">
+                        <!-- Background image for card set in CSS! -->
+                    </div>
+                    <div class="card-body" style="padding-top:80px">
+                        <h5 class="card-title text-center">
+                            @ViewBag.user Login
+                        </h5>
+                        @using (Ajax.BeginForm("Login", "Home", new AjaxOptions { HttpMethod = "post" }, new { @class = "form-signin" }))
+                        {
+                            @Html.HiddenFor(m=>m.userType)
+                            <div class="form-label-group">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", id = "inputEmail", placeholder = "Enter Email address or Phone Number", autofocus = "" })
+                                <label for="inputEmail">Enter Email address or Phone Number</label>
+                            </div>
+
+                            <hr>
+
+                            <div class="form-label-group">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "inputPassword", placeholder = "Enter Password" })
+                                <label for="inputPassword">Enter Password</label>
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Login</button>
+                            <hr class="my-4">
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (TempData["Message"] != null)
+    {
+        <script>
+
+            window.onload = function () {
+                alert('Login Failed')
+            }
+
+        </script>
+    }
+</body>
+</html>

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Yonder.Models.BillingMain>
+
+@{
+    ViewBag.Title = "DetailsLevelTwo";
+    Layout = "~/Views/StoreHome/_StoreHome.cshtml";
+}
+
+<div class="loading" style="display:none">
+    Loading
+</div>
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Shop Number : @Model.FirstOrDefault().shopNumber
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+
+        <div class="panel-group">
+            <table id="payments" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Invoice Number</th>
+                        <th>Customer Name</th>
+                        <th>Amount</th>
+                        <th>GST Amount</th>
+                        <th>Discount</th>
+                        <th>Net Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var payment in Model)
+                    {
+                        <tr>
+                            <td>@payment.invoiceNumber</td>
+                            <td>@payment.name</td>
+                            <td class="text-right">@payment.totalAmount</td>
+                            <td class="text-right">@payment.GST_amt</td>
+                            <td class="text-right">@payment.netAmount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-group">
+            <form id="paymentForm">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Amount">Total Amount</label>
+                        <input type="text" id="Amount" disabled="disabled" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="Amount">Paid By</label>
+                        <input type="text" id="paid_by" class="form-control" required />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="Amount">Paid To</label>
+                        <input type="text" id="paid_to" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="btnSubmit" class="btn btn-default" value="Make payment" style="background-color:#f7d301" />
+                        <a href="@Url.Action("Index")" id="Amount" class="btn btn-default">
+                            <i class="glyphicon"></i> Go Back
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="panel-footer">
+
+    </div>
+</div>
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/Moment")
+    <script>
+        $(document).ready(function () {
+            var table = $('#payments').DataTable({
+                lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'ALL']],
+                language: {
+                    "info": "Number of Days : _TOTAL_ ",
+                    "lengthMenu": "_MENU_",
+                },
+                paging: false,
+                scrollY: "400px",
+                scrollCollapse: true,
+                length: true,
+                searching:false
+            })
+            $('#payments_filter input').addClass('form-control input-sm');
+            $('.dataTables_length select').addClass('form-control input-sm')
+        })
+
+    </script>
+}

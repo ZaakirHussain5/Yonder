@@ -1,0 +1,137 @@
+﻿@model IEnumerable<Yonder.Models.Package>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+   Packages
+</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
+            <a href="@Url.Action("New", "Packages")"
+               class="btn btn-default btn-lg" style="background-color:#ffda0f;width:auto">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                 Create New Package
+            </a> </p>
+        <table id="packages" class="table table-bordered table-hover margin-top-20">
+            <thead>
+                <tr>
+                    <th>
+                        Card Type
+                    </th>
+                    <th>
+                        Package Type
+                    </th>
+                    <th>
+                       Amount
+                    </th>
+                    <th>
+                       Description
+                    </th>
+                    <th>
+                        Payable Amount
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.CardType
+                        </td>
+                        <td>
+                            @item.Type
+                        </td>
+                        <td>
+                            @item.Amount
+                        </td>
+                        <td>
+                            @item.Desc
+                        </td>
+                        <td>
+                            @item.payAbleAmt
+                        </td>
+                        <td>
+                            @if(item.isActive)
+                            {
+                                @:Active
+                            }
+                            else
+                            {
+                                @:InActive
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit",new {id=item.slno})" class="btn btn-sm" style="background-color:transparent">
+                                <i class="glyphicon glyphicon-pencil" style="color:blue"></i>
+                            </a>
+                            <button data-package-id="@item.slno" class="btn btn-sm p-delete" style="background-color:transparent">
+                                <i class="glyphicon glyphicon-remove" style="color:red"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+       
+
+@section scripts
+    {
+    <script>
+    $(document).ready(function () {
+            var table = $("#packages").DataTable({
+                responsive:true
+            })
+            $('#packages_filter input').addClass("form-control")
+            $('.dataTables_length select').addClass("form-control")
+            $('.p-delete').on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Are You Sure you want to delete this card type?", function (result) {
+                    if (result) {
+                        var id = button.attr('data-package-id');
+                        $('.loading').show()
+                        $.ajax({
+                            url: '/Packages/Delete/' + id,
+                            method: 'post',
+                            success: function (result) {
+                                $('.loading').hide()
+                                if (result.Success) {
+                                    table.row(button.parents("tr")).remove().draw();
+                                    toastr.success("Package Delete!", "Success", { positionClass: "toast-top-center" })
+                                }
+                                else {
+                                    toastr.error("Deletion Failed","Error",{positionClass:"toast-top-center"})
+                                }
+                            },
+                            error: function () {
+                                $('.loading').hide()
+                                toastr.error("Server Error", "Error", { positionClass: "toast-top-center" })
+                            }
+                        })
+                    }
+                }).find('.modal-content').css({
+                    'margin-top': function () {
+                        var w = $(window).height();
+                        var b = $(".modal-dialog").height();
+                        // should not be (w-h)/2
+                        var h = (w - b) / 3;
+                        return h + "px";
+                    }
+                })
+        })
+    })
+</script>
+    }

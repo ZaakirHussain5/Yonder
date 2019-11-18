@@ -1,0 +1,22 @@
+﻿
+<!DOCTYPE html>
+<html>
+@Html.Partial("_Head")
+
+
+<body class="background-tint">
+
+    @Html.Partial("_ShopNavbar")
+    <div class="container body-content">
+
+        @RenderBody()
+
+        @Html.Partial("_Footer")
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+  
+</body>
+</html>

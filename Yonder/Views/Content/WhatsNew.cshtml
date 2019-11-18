@@ -1,0 +1,123 @@
+﻿@model Yonder.Models.WebContent
+
+@{
+    ViewBag.Title = "WhatsNew";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    Whats New Contents
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+
+        <div class="tab-pane fade in active" id="Recharge">
+            <div class="panel-group">
+                @using (Ajax.BeginForm("WhatsNew", null, new AjaxOptions { HttpMethod = "POST" }, new { id = "WhatsNewContentForm" }))
+                {
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.title, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.title, "", new { @class = "text-danger" })
+                            @Html.TextBoxFor(m => m.title, new { @class = "form-control", placeholder = "Enter Title" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.short_description, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.short_description, "", new { @class = "text-danger" })
+                            @Html.TextAreaFor(m => m.short_description, new { @class = "form-control", placeholder = "Enter Short Decription" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            @Html.LabelFor(m => m.detailed_description, new { @class = "control-label" })
+                            @Html.ValidationMessageFor(m => m.detailed_description, "", new { @class = "text-danger" })
+                            @Html.TextAreaFor(m => m.detailed_description, new { @class = "form-control", placeholder = "Enter Detailed Description", style = "height:200px;width550px" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            @if (Model.Image == null)
+                            {
+                                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label " })
+                                <input type="file" id="ImageFile" class="form-control" required />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content(Model.Image)" class="img-responsive img-thumbnail" style="width:200px;height:100px" />
+                                <div class="btn btn-default">
+                                    <i class="glyphicon glyphicon-edit"></i><label for="ImageFile">Change Image</label>
+                                    <input type="file" id="ImageFile" class="sr-only" />
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input class=" btn btn-default" style="background-color:#ffd800" type="submit" value="Save" />
+                        </div>
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    $(document).ready(function () {
+
+
+        $('#WhatsNewContentForm').submit(function (e) {
+            if ($('#WhatsNewContentForm').valid()) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var action = $("#WhatsNewContentForm").attr("action");
+                var data = new FormData($("#WhatsNewContentForm").get(0))
+                if (document.getElementById("ImageFile").files.length !== 0) {
+                    var file = document.getElementById("ImageFile").files[0];
+                    data.append("ImageFile", file)
+                }
+                $('.loading').show();
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (result) {
+                        if (result.Success) {
+                            $('.loading').hide();
+                            toastr.success(result.Message, "Success", { positionClass: 'toast-top-center' })
+                        }
+                        else {
+                            $('.loading').hide();
+                            toastr.error(result.Message, "Error", { positionClass: 'toast-top-center' })
+                        }
+                    },
+                    error: function (result) {
+                        $('.loading').hide();
+                        toastr.error("Server Error", "Error", { positionClass: 'toast-top-center' })
+                    }
+                })
+            }
+        })
+    })
+    </script>
+
+}
+

@@ -1,0 +1,121 @@
+﻿@model Yonder.Models.WebContent
+@{
+    ViewBag.Title = "About";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+<section id="home" class="slider" data-stellar-background-ratio="0.5">
+    <div class="row">
+        <div class="item item-fourth" style="height: 250px;background-image:url('../../Content/Customer/images/slider-img5.jpg')">
+            <div class="caption">
+                <div class="container">
+                    <div class="col-md-8 col-sm-12">
+                        <h1>About Us</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ABOUT -->
+<section id="about" data-stellar-background-ratio="0.5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="wow fadeInUp about-image" data-wow-delay="0.6s">
+                    <img src="@Model.Image" class="img-responsive" alt=""> >
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="about-info">
+                    <div class="section-title wow fadeInUp" data-wow-delay="0.2s">
+                        <h2></h2>
+                        <h2 style="padding-left:25px">@Model.title</h2>
+                    </div>
+
+                    <div class="wow fadeInUp" data-wow-delay="0.4s">
+                        <p style="color:black;padding:25px">
+                            
+                            @Model.short_description
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-sm-12">
+                <p style="color:black;padding:25px">
+                    @Model.detailed_description
+                </p>
+            </div>
+
+            
+
+        </div>
+    </div>
+</section>
+
+
+<!-- TEAM -->
+<section id="team" data-stellar-background-ratio="0.5">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+                    <h2>Our other Enterprises</h2>
+                    <h4></h4>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="team-thumb wow fadeInUp" data-wow-delay="0.2s">
+                    <img src="@Url.Content("~/Content/Customer/images/nestwell.png")" class="img-responsive grid-img" alt=""><div class="team-hover">
+                        <div class="team-item">
+                            <h4>Nestwell</h4>
+                            <ul class="social-icon">
+                                <li><a href="http://www.nestwell.org/" target="_blank" class="fa fa-link"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>DESIGNER</h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="team-thumb wow fadeInUp" data-wow-delay="0.4s">
+                    <img src="@Url.Content("~/Content/Customer/images/na.png")" class="img-responsive grid-img" alt=""><div class="team-hover">
+                        <div class="team-item">
+                            <h4>Nityananda Associates</h4>
+                            <ul class="social-icon">
+                                <li><a href="http://www.nestwell.org/" target="_blank" class="fa fa-link"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>ASSOCIATION</h3>
+                    <p></p>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-4">
+                <div class="team-thumb wow fadeInUp" data-wow-delay="0.6s">
+                    <img src="@Url.Content("~/Content/Customer/images/SN.png")" class="img-responsive grid-img" alt=""><div class="team-hover">
+                        <div class="team-item">
+                            <h4>Starling Nests</h4>
+                            <ul class="social-icon">
+                                <li><a href="http://www.nestwell.org/starling_nest.html" target="_blank" class="fa fa-link"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-info">
+                    <h3>APARTMENTS</h3>
+                    <p></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Yonder.ViewModels.VendorPaymentsViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">
+    Loading
+</div>
+<h2 class="w3-margin-top col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+   Vendor Payments
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+
+        <div class="panel-group">
+            <table id="payments" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Shop</th>
+                        <th>Owner</th>
+                        <th>Collection</th>
+                        <th>GST Amount</th>
+                        <th>Partner Need Percentage</th>
+                        <th>Total Payable</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var payment in Model)
+                    {
+                        <tr>
+                            <td>@payment.name</td>
+                            <td>@payment.Owner</td>
+                            <td class="text-right">@payment.Collection</td>
+                            <td class="text-right">@payment.gst</td>
+                            <td class="text-right">@payment.partner_need_percent</td>
+                            <td class="text-right">@payment.Amount</td>
+                            <td>
+                                <a href="/VendorPayments/Details/@payment.shopnumber" class="btn w3-white btn-sm"> 
+                                    <span class="glyphicon glyphicon-list text-primary"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel-footer">
+        
+    </div>
+</div>
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/Moment")
+    <script>
+        $(document).ready(function () {
+            var table = $('#payments').DataTable({
+                lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'ALL']]
+            })
+            $('#payments_filter input').addClass('form-control input-sm');
+            $('.dataTables_length select').addClass('form-control input-sm')
+        })
+     
+    </script>
+    }
+
+
+

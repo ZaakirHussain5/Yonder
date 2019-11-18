@@ -1,0 +1,136 @@
+﻿@model Yonder.Models.CardType
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/AdminHome/_adminHomePage.cshtml";
+}
+
+<div class="loading" style="display:none">Loading</div>
+
+<h2 class="margin-top-20 col-md-10 col-md-offset-1"
+    style="background-color:#F7D031;padding:15px 15px 15px 15px;">
+    New Card Type
+</h2>
+
+<div class="panel panel-default col-md-10 col-md-offset-1">
+    <div class="panel-body">
+        <form id="CardTypeForm">
+            @Html.AntiForgeryToken()
+
+            <div class="center">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-horizontal">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-2">
+                            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label text-left", style = "text-align:left" })
+                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Type, new { @class = "form-control", placeholder = "Enter Card type" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="col-md-2">
+                            @Html.LabelFor(model => model.value, htmlAttributes: new { @class = "control-label text-left", style = "text-align:left" })
+                            @Html.ValidationMessageFor(model => model.value, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.value, new { @class = "form-control", placeholder = "Enter Card value" })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="col-md-2">
+                            @Html.LabelFor(model => model.discount, htmlAttributes: new { @class = "control-label text-left", style = "text-align:left" })
+                            @Html.ValidationMessageFor(model => model.discount, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.discount, new { @class = "form-control", placeholder = "Enter Discount in %" })
+
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.CardTypeId)
+                <div class="form-group col-md-offset-2">
+                    <div>
+                        <input type="submit" value="Save" class="btn btn-default" style="background-color:#ffda0f;border-radius:0px;width:100px;margin-left:10px;height:30px;padding:0.5px" />
+                        <button type="reset" class="btn btn-default" style="border-radius:0px;width:100px;height:30px;padding:0.5px">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer">
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section scripts{
+    
+  @Scripts.Render("~/bundles/jqueryval")
+
+   <script>
+       
+
+       $(document).ready(function () {
+
+           var validator = $("#CardTypeForm").submit(function (e) {
+               if ($("#CardTypeForm").valid()) {
+                   e.preventDefault();
+                   e.stopImmediatePropagation();
+                   var dataString;
+                   var action = '/CardType/Save';
+                   dataString = new FormData($("#CardTypeForm").get(0));
+                   contentType = false;
+                   processData = false;
+                   $('.loading').show();
+                   $.ajax({
+                       type: "POST",
+                       url: action,
+                       data: dataString,
+                       dataType: "json",
+                       contentType: contentType,
+                       processData: processData
+                   }).done(function (result) {
+                       $('.loading').hide();
+                       if (result.Success) {
+                           toastr.success(result.Message, "Success", { positionClass: "toast-top-center" })
+                       }
+                       else
+                           toastr.error(result.Message, "Error", { positionClass: "toast-top-center" })
+                   }).fail(function () {
+                       toastr.error("Something unexpected happened", "Error", { positionClass: "toast-top-center" })
+
+                   });
+               }
+               
+           })
+           
+
+          
+
+
+           //end .submit()  
+       });
+</script>
+
+
+
+
+ 
+     
+}
